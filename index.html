@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevance Annotation — NFDI4Earth</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --border: #d6d0c4;
+      --text: #1a1814;
+      --text-muted: #7a7468;
+      --accent: #2d5a3d;
+      --accent-light: #e8f0eb;
+      --warn: #8b6914;
+      --warn-light: #fdf0e8;
+      --no-color: #7a3030;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 4px 16px rgba(0, 0, 0, .04);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark { width: 32px; height: 32px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; fill: white; }
+    .logo-title { font-family: 'Libre Baskerville', serif; font-size: 15px; font-weight: 700; }
+    .logo-sub { font-size: 11px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
+    .progress-wrap { display: flex; align-items: center; gap: 10px; }
+    .progress-label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-muted); }
+    .progress-bar { width: 140px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .3s; }
+    .screen { display: none; flex: 1; flex-direction: column; }
+    .screen.active { display: flex; }
+    #screen-loading { align-items: center; justify-content: center; gap: 16px; }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #screen-welcome { align-items: center; justify-content: center; padding: 40px 20px; }
+    .welcome-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 640px; width: 100%; box-shadow: var(--shadow); }
+    .welcome-card h1 { font-family: 'Libre Baskerville', serif; font-size: 24px; margin-bottom: 8px; }
+    .lead { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; }
+    .field input[type="text"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); outline: none; font-family: 'DM Sans', sans-serif; }
+    .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border); }
+    .prof-option { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; color: var(--text); }
+    #screen-annotate { padding: 24px 32px; gap: 20px; flex-direction: row; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .query-panel { width: 280px; flex-shrink: 0; position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
+    .query-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--shadow); }
+    .query-text { font-family: 'Libre Baskerville', serif; font-size: 15px; line-height: 1.5; }
+    .main-panel { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+    .doc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; box-shadow: var(--shadow); min-height: 250px; }
+    .doc-title { font-family: 'Libre Baskerville', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; color: var(--accent); }
+    .doc-abstract { font-size: 14px; line-height: 1.7; color: #3a3530; }
+    .judgment-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+    .judgment-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .jbtn { padding: 12px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .15s; }
+    .jbtn.sel { outline: 2px solid var(--text); outline-offset: 2px; }
+    .jbtn.b3 { background: var(--accent-light); color: var(--accent); }
+    .jbtn.b0 { background: #fce8e8; color: var(--no-color); }
+    .btn-submit { padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all .2s; }
+    .btn-submit:hover { background: #1e3d29; }
+    .btn-submit.incomplete { background: #a5a098; }
+    .doc-dot { width: 26px; height: 26px; border-radius: 4px; background: #eeebe6; border: 1px solid var(--border); font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .doc-dot.current { border-color: var(--accent); background: var(--accent-light); font-weight: bold; }
+    .doc-dot.judged { background: #d0e0d5; border-color: var(--accent); }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 1000; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <script>
+    const CONFIG = {
+      API_BASE_URL: "https://klimakonform-maps.geo.tu-dresden.de/eval",
+      DOCUMENT_API: "https://klimakonform-maps.geo.tu-dresden.de/eval/document",
+      GITHUB_TOPICS_URL: "./topics.tsv",
+      GITHUB_QRELS_URL: "./qrels.txt",
+      QUERIES_PER_ANNOTATOR: 5,
+      DOCS_PER_QUERY: 5,
+      MAX_ANNOTATIONS_PER_QUERY: 3,
+    };
+  </script>
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+      <div>
+        <div class="logo-title">Relevance Annotation</div>
+        <div class="logo-sub">NFDI4Earth · Priority IAA</div>
+      </div>
+    </div>
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
+      <span class="progress-label" id="progress-label">0 / 0</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </header>
+
+  <div id="screen-loading" class="screen active">
+    <div class="spinner"></div>
+    <div class="loading-msg" id="loading-msg">Initializing...</div>
+  </div>
+
+  <div id="screen-welcome" class="screen">
+    <div class="welcome-card">
+      <h1>Metadata Relevance Study</h1>
+      <p class="lead">Help us improve Earth science discovery. This study is <strong>anonymous</strong>.</p>
+      
+      <div class="field">
+        <label>Institution / Organization (Optional)</label>
+        <input type="text" id="institution" placeholder="e.g. TU Dresden, PIK, etc.">
+      </div>
+
+      <div class="field">
+        <label>Your Profession / Background</label>
+        <div class="prof-grid">
+          <label class="prof-option"><input type="checkbox" name="profession" value="Researcher"> Researcher</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Data Manager"> Data Manager</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Student"> Student</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Earth Scientist"> Earth Scientist</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Developer"> Developer</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Other"> Other</label>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-start" style="width:100%" onclick="assignAndStart()">Start Annotation →</button>
+      <div id="start-error" style="color:var(--no-color); font-size:12px; margin-top:10px; display:none;"></div>
+    </div>
+  </div>
+
+  <div id="screen-annotate" class="screen">
+    <div class="query-panel">
+      <div class="query-box">
+        <div style="font-family:'IBM Plex Mono'; font-size:10px; color:var(--text-muted); margin-bottom:8px;" id="query-id-label">QUERY ID</div>
+        <div class="query-text" id="query-text">...</div>
+      </div>
+      <div class="query-box">
+        <div style="font-family:'IBM Plex Mono'; font-size:10px; color:var(--text-muted); margin-bottom:8px;">DOCUMENTS</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;" id="doc-dots"></div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="jbtn" style="flex:1; font-size:11px; background:white; border:1px solid var(--border)" onclick="changeQuery(-1)">← Prev Query</button>
+        <button class="jbtn" style="flex:1; font-size:11px; background:white; border:1px solid var(--border)" onclick="changeQuery(1)">Next Query →</button>
+      </div>
+    </div>
+
+    <div class="main-panel">
+      <div class="doc-card">
+        <div id="doc-content">
+          <div class="doc-title" id="doc-title">Loading...</div>
+          <div class="doc-abstract" id="doc-abstract"></div>
+        </div>
+      </div>
+
+      <div class="judgment-card">
+        <div style="font-size:13px; margin-bottom:12px; font-weight:500;">How relevant is this record?</div>
+        <div class="judgment-buttons">
+          <button class="jbtn b3" onclick="judge(3)" id="btn-3"><span>Highly</span><span style="font-size:10px; opacity:0.7">3</span></button>
+          <button class="jbtn b3" style="background:#eaf4f0; color:#297050" onclick="judge(2)" id="btn-2"><span>Partial</span><span style="font-size:10px; opacity:0.7">2</span></button>
+          <button class="jbtn b0" style="background:var(--warn-light); color:var(--warn)" onclick="judge(1)" id="btn-1"><span>Marginal</span><span style="font-size:10px; opacity:0.7">1</span></button>
+          <button class="jbtn b0" onclick="judge(0)" id="btn-0"><span>Not Rel</span><span style="font-size:10px; opacity:0.7">0</span></button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content: space-between; align-items: center;">
+        <button class="jbtn" style="background:none; border:none; color:var(--text-muted)" onclick="navigateDoc(-1)">← Prev</button>
+        <button class="btn-submit" id="btn-submit" onclick="submitAll()">Submit Judgments</button>
+        <button class="jbtn" style="background:none; border:none; color:var(--text-muted)" onclick="navigateDoc(1)">Skip →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-done" class="screen">
+    <div class="done-card" style="margin: auto;">
+      <div style="font-size:48px;">🎉</div>
+      <h2>Completed</h2>
+      <p style="color:var(--text-muted); margin: 20px 0;">Annotations saved. Thank you for your time.</p>
+      <button class="btn-submit" onclick="location.reload()">Start New Session</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let state = {
+      annotator: '',
+      profession: '',
+      institution: '', // Added to state
+      startTime: null,
+      assignedQueries: [],
+      qIdx: 0,
+      dIdx: 0,
+      judgments: {},
+    };
+
+    let allTopics = [];
+    let allQrels = {};
+    let coverageDataGlobal = {};
+    let saturatedQids = new Set();
+    const docCache = {};
+
+    async function init() {
+      try {
+        setLoadingMsg("Loading topics...");
+        allTopics = parseTSV(await fetch(CONFIG.GITHUB_TOPICS_URL).then(r => r.text()), ["qid", "query"]);
+        allQrels = parseQrels(await fetch(CONFIG.GITHUB_QRELS_URL).then(r => r.text()));
+        await fetchSaturatedQueries();
+        showScreen("welcome");
+      } catch (e) { document.getElementById("loading-msg").textContent = "Error loading data."; }
+    }
+
+    function parseTSV(t, c) { return t.trim().split("\n").slice(1).map(l => { let p = l.split("\t"), o = {}; c.forEach((k, i) => o[k] = (p[i] || "").trim()); return o; }).filter(r => r.qid); }
+    function parseQrels(t) { let q = {}; t.trim().split("\n").forEach(l => { let p = l.trim().split(/\s+/); if (p.length < 4) return; if (!q[p[0]]) q[p[0]] = []; q[p[0]].push({ doc_id: p[2], score: parseInt(p[3]) }); }); return q; }
+
+    async function fetchSaturatedQueries() {
+      try {
+        const r = await fetch(`${CONFIG.API_BASE_URL}/annotations/coverage`);
+        if (!r.ok) return;
+        coverageDataGlobal = await r.json();
+        Object.entries(coverageDataGlobal).forEach(([qid, count]) => { if (count >= CONFIG.MAX_ANNOTATIONS_PER_QUERY) saturatedQids.add(qid); });
+      } catch (e) {}
+    }
+
+    async function fetchDocument(id) {
+      if (docCache[id]) return docCache[id];
+      try {
+        const r = await fetch(`${CONFIG.DOCUMENT_API}/${id}`);
+        const d = await r.json();
+        if (!d.abstract || d.abstract.length < 50) return null;
+        return docCache[id] = { title: d.title || `Doc ${id}`, abstract: d.abstract };
+      } catch (e) { return null; }
+    }
+
+    async function assignAndStart() {
+      const profs = Array.from(document.querySelectorAll('input[name="profession"]:checked')).map(el => el.value);
+      if (profs.length === 0) { showStartError("Select a profession."); return; }
+
+      const startBtn = document.getElementById("btn-start");
+      startBtn.disabled = true;
+      startBtn.textContent = "Sampling prioritized queries...";
+
+      try {
+        state.annotator = "Anon-" + Math.floor(1000 + Math.random() * 9000);
+        state.profession = profs.join(", ");
+        state.institution = document.getElementById("institution").value.trim() || "Unspecified";
+        
+        const pool = allTopics.filter(t => !saturatedQids.has(t.qid)).sort((a, b) => {
+          let cA = coverageDataGlobal[a.qid] || 0, cB = coverageDataGlobal[b.qid] || 0;
+          return (cB !== cA) ? cB - cA : 0.5 - Math.random();
+        });
+        
+        const finalSelection = [];
+        for (let t of pool) {
+          if (finalSelection.length >= CONFIG.QUERIES_PER_ANNOTATOR) break;
+          const docs = (allQrels[t.qid] || []).sort(() => 0.5 - Math.random()), valid = [];
+          for (let d of docs) {
+            if (valid.length >= CONFIG.DOCS_PER_QUERY) break;
+            if (await fetchDocument(d.doc_id)) valid.push(d);
+          }
+          if (valid.length >= CONFIG.DOCS_PER_QUERY) finalSelection.push({ ...t, docs: valid });
+        }
+
+        state.assignedQueries = finalSelection;
+        state.startTime = Date.now();
+        showScreen("annotate");
+        document.getElementById("progress-wrap").style.display = "flex";
+        renderAnnotation();
+      } catch (e) { showStartError("Could not sample queries. Retry."); startBtn.disabled = false; }
+    }
+
+    async function renderAnnotation() {
+      const q = state.assignedQueries[state.qIdx], d = q.docs[state.dIdx];
+      document.getElementById("query-id-label").textContent = `QUERY ${q.qid} · ${state.qIdx + 1}/${state.assignedQueries.length}`;
+      document.getElementById("query-text").textContent = q.query;
+      const dots = document.getElementById("doc-dots"); dots.innerHTML = "";
+      q.docs.forEach((doc, idx) => {
+        const dot = document.createElement("div");
+        dot.className = `doc-dot ${idx === state.dIdx ? 'current' : ''} ${state.judgments[`${q.qid}_${doc.doc_id}`] !== undefined ? 'judged' : ''}`;
+        dot.textContent = idx + 1; dot.onclick = () => { state.dIdx = idx; renderAnnotation(); };
+        dots.appendChild(dot);
+      });
+      const data = await fetchDocument(d.doc_id);
+      document.getElementById("doc-title").textContent = data.title;
+      document.getElementById("doc-abstract").textContent = data.abstract;
+      document.querySelectorAll(".judgment-buttons .jbtn").forEach(b => b.classList.remove("sel"));
+      const score = state.judgments[`${q.qid}_${d.doc_id}`];
+      if (score !== undefined) document.getElementById(`btn-${score}`).classList.add("sel");
+      updateProgress(); checkSubmitReady();
+    }
+
+    function judge(s) {
+      const q = state.assignedQueries[state.qIdx], d = q.docs[state.dIdx];
+      state.judgments[`${q.qid}_${d.doc_id}`] = s;
+      if (state.dIdx < q.docs.length - 1) state.dIdx++;
+      else if (state.qIdx < state.assignedQueries.length - 1) { state.qIdx++; state.dIdx = 0; showToast("Next query..."); }
+      renderAnnotation();
+    }
+
+    function checkSubmitReady() {
+      const btn = document.getElementById("btn-submit"), count = Object.keys(state.judgments).length;
+      const total = state.assignedQueries.reduce((a, q) => a + q.docs.length, 0);
+      btn.classList.toggle("incomplete", count < total);
+      btn.textContent = count < total ? `Submit Partial (${count}/${total})` : "Submit All Judgments";
+    }
+
+    async function submitAll() {
+      const rows = [], ts = new Date().toISOString();
+      Object.entries(state.judgments).forEach(([k, s]) => {
+        const [qid, doc_id] = k.split("_"), q = state.assignedQueries.find(i => i.qid === qid);
+        rows.push({ annotator: state.annotator, profession: state.profession, institution: state.institution, qid, query: q.query, doc_id, score: s, timestamp: ts });
+      });
+      const btn = document.getElementById("btn-submit"); btn.disabled = true; btn.textContent = "Saving...";
+      try {
+        const r = await fetch(`${CONFIG.API_BASE_URL}/annotations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rows }) });
+        if (r.ok) showScreen("done"); else throw new Error();
+      } catch (e) { btn.disabled = false; alert("Failed to save."); }
+    }
+
+    function updateProgress() {
+      const total = state.assignedQueries.reduce((a, q) => a + q.docs.length, 0), done = Object.keys(state.judgments).length;
+      document.getElementById("progress-label").textContent = `${done} / ${total}`;
+      document.getElementById("progress-fill").style.width = `${(done / total) * 100}%`;
+    }
+
+    function navigateDoc(dir) { const q = state.assignedQueries[state.qIdx]; state.dIdx = Math.max(0, Math.min(q.docs.length - 1, state.dIdx + dir)); renderAnnotation(); }
+    function changeQuery(dir) { state.qIdx = Math.max(0, Math.min(state.assignedQueries.length - 1, state.qIdx + dir)); state.dIdx = 0; renderAnnotation(); }
+    function showScreen(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("active")); document.getElementById(`screen-${id}`).classList.add("active"); }
+    function setLoadingMsg(m) { document.getElementById("loading-msg").textContent = m; }
+    function showStartError(m) { const el = document.getElementById("start-error"); el.textContent = m; el.style.display = "block"; }
+    function showToast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2000); }
+    document.addEventListener("keydown", e => { if (!document.getElementById("screen-annotate").classList.contains("active")) return; if (["0", "1", "2", "3"].includes(e.key)) judge(parseInt(e.key)); if (e.key === "ArrowRight") navigateDoc(1); if (e.key === "ArrowLeft") navigateDoc(-1); });
+    init();
+  </script>
+</body>
+</html>
