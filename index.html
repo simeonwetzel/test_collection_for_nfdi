@@ -914,6 +914,7 @@
       cursor: pointer;
       border-radius: 6px;
       transition: all .12s;
+      display: none !important;
     }
 
     .btn-nav:hover {
@@ -1584,18 +1585,21 @@
       const d = q.docs[state.dIdx];
       const key = judgmentKey(q.qid, d.doc_id);
 
-      const alreadyJudged = state.judgments[key] !== undefined;
+      // Save the score (re-writing it if it already exists)
       state.judgments[key] = score;
 
-      // Only auto-advance on a fresh judgment — re-scoring in place doesn't skip
-      if (!alreadyJudged) {
-        if (state.dIdx < q.docs.length - 1) {
-          state.dIdx++;
-        } else if (state.qIdx < state.assignedQueries.length - 1) {
-          state.qIdx++;
-          state.dIdx = 0;
-          showToast(`Query ${state.qIdx + 1} of ${state.assignedQueries.length}`);
-        }
+      // ALWAYS auto-advance to help the user move through the list
+      if (state.dIdx < q.docs.length - 1) {
+        // Move to next document in same query
+        state.dIdx++;
+      } else if (state.qIdx < state.assignedQueries.length - 1) {
+        // Move to first document of NEXT query
+        state.qIdx++;
+        state.dIdx = 0;
+        showToast(`Moving to Query ${state.qIdx + 1}`);
+      } else {
+        // We are at the very last document of the very last query
+        showToast("All documents reached! You can now Submit.");
       }
 
       renderAnnotation();
