@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relevance Annotation — NFDI4Earth</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+    rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --bg:           #f0ede8;
-      --surface:      #faf9f6;
-      --surface-2:    #f3f0eb;
-      --border:       #ddd8cf;
-      --border-soft:  #e8e4de;
-      --text:         #1c1a17;
-      --text-muted:   #7c7469;
-      --text-faint:   #b0a89e;
-      --accent:       #2a5c3f;
-      --accent-mid:   #3a7a55;
+      --bg: #f0ede8;
+      --surface: #faf9f6;
+      --surface-2: #f3f0eb;
+      --border: #ddd8cf;
+      --border-soft: #e8e4de;
+      --text: #1c1a17;
+      --text-muted: #7c7469;
+      --text-faint: #b0a89e;
+      --accent: #2a5c3f;
+      --accent-mid: #3a7a55;
       --accent-light: #dff0e7;
       --accent-faint: #eef6f1;
-      --warn:         #7a5c14;
-      --warn-light:   #fdf4e3;
-      --no:           #7a2e2e;
-      --no-light:     #fdeaea;
-      --partial:      #1a5478;
-      --partial-light:#e5f2fb;
-      --shadow-sm:    0 1px 2px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
-      --shadow:       0 2px 4px rgba(0,0,0,.05), 0 6px 24px rgba(0,0,0,.06);
-      --shadow-lg:    0 4px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08);
-      --radius:       10px;
-      --radius-lg:    14px;
+      --warn: #7a5c14;
+      --warn-light: #fdf4e3;
+      --no: #7a2e2e;
+      --no-light: #fdeaea;
+      --partial: #1a5478;
+      --partial-light: #e5f2fb;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05), 0 2px 8px rgba(0, 0, 0, .04);
+      --shadow: 0 2px 4px rgba(0, 0, 0, .05), 0 6px 24px rgba(0, 0, 0, .06);
+      --shadow-lg: 0 4px 8px rgba(0, 0, 0, .06), 0 16px 48px rgba(0, 0, 0, .08);
+      --radius: 10px;
+      --radius-lg: 14px;
     }
 
     body {
@@ -72,10 +81,13 @@
       place-items: center;
     }
 
-    .logo-icon svg { display: block; }
+    .logo-icon svg {
+      display: block;
+    }
 
     .logo-name {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
       font-size: 15px;
       letter-spacing: 0.01em;
     }
@@ -118,8 +130,15 @@
     }
 
     /* ── Screens ─────────────────────────────────────── */
-    .screen { display: none; flex: 1; flex-direction: column; }
-    .screen.active { display: flex; }
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex;
+    }
 
     /* ── Loading ─────────────────────────────────────── */
     #screen-loading {
@@ -137,7 +156,11 @@
       animation: spin .7s linear infinite;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     .loading-text {
       font-family: 'IBM Plex Mono', monospace;
@@ -173,7 +196,8 @@
     }
 
     .welcome-title {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
       font-size: 32px;
       line-height: 1.15;
       margin-bottom: 10px;
@@ -186,7 +210,9 @@
       margin-bottom: 28px;
     }
 
-    .field { margin-bottom: 20px; }
+    .field {
+      margin-bottom: 20px;
+    }
 
     .field-label {
       display: block;
@@ -212,7 +238,9 @@
       transition: border-color .15s;
     }
 
-    .field input[type="text"]:focus { border-color: var(--accent-mid); }
+    .field input[type="text"]:focus {
+      border-color: var(--accent-mid);
+    }
 
     .prof-grid {
       display: grid;
@@ -240,9 +268,15 @@
       color: var(--accent);
     }
 
-    .prof-option input { display: none; }
+    .prof-option input {
+      display: none;
+    }
 
-    .divider { height: 1px; background: var(--border-soft); margin: 24px 0; }
+    .divider {
+      height: 1px;
+      background: var(--border-soft);
+      margin: 24px 0;
+    }
 
     .btn-primary {
       width: 100%;
@@ -259,8 +293,14 @@
       letter-spacing: .01em;
     }
 
-    .btn-primary:hover { background: #1d4229; }
-    .btn-primary:disabled { background: #a5a098; cursor: not-allowed; }
+    .btn-primary:hover {
+      background: #1d4229;
+    }
+
+    .btn-primary:disabled {
+      background: #a5a098;
+      cursor: not-allowed;
+    }
 
     .field-error {
       margin-top: 10px;
@@ -297,7 +337,8 @@
     }
 
     .guide-title {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
       font-size: 28px;
       margin-bottom: 6px;
     }
@@ -326,10 +367,25 @@
       border: 1px solid transparent;
     }
 
-    .scale-row.s3 { background: var(--accent-light);  border-color: #b8dcc6; }
-    .scale-row.s2 { background: var(--partial-light); border-color: #b8d8ee; }
-    .scale-row.s1 { background: var(--warn-light);    border-color: #e8d4a0; }
-    .scale-row.s0 { background: var(--no-light);      border-color: #e8c0c0; }
+    .scale-row.s3 {
+      background: var(--accent-light);
+      border-color: #b8dcc6;
+    }
+
+    .scale-row.s2 {
+      background: var(--partial-light);
+      border-color: #b8d8ee;
+    }
+
+    .scale-row.s1 {
+      background: var(--warn-light);
+      border-color: #e8d4a0;
+    }
+
+    .scale-row.s0 {
+      background: var(--no-light);
+      border-color: #e8c0c0;
+    }
 
     .scale-badge {
       flex-shrink: 0;
@@ -343,12 +399,29 @@
       font-weight: 600;
     }
 
-    .s3 .scale-badge { background: var(--accent);   color: white; }
-    .s2 .scale-badge { background: var(--partial);  color: white; }
-    .s1 .scale-badge { background: var(--warn);     color: white; }
-    .s0 .scale-badge { background: var(--no);       color: white; }
+    .s3 .scale-badge {
+      background: var(--accent);
+      color: white;
+    }
 
-    .scale-body { flex: 1; }
+    .s2 .scale-badge {
+      background: var(--partial);
+      color: white;
+    }
+
+    .s1 .scale-badge {
+      background: var(--warn);
+      color: white;
+    }
+
+    .s0 .scale-badge {
+      background: var(--no);
+      color: white;
+    }
+
+    .scale-body {
+      flex: 1;
+    }
 
     .scale-name {
       font-size: 13px;
@@ -356,10 +429,21 @@
       margin-bottom: 2px;
     }
 
-    .s3 .scale-name { color: var(--accent); }
-    .s2 .scale-name { color: var(--partial); }
-    .s1 .scale-name { color: var(--warn); }
-    .s0 .scale-name { color: var(--no); }
+    .s3 .scale-name {
+      color: var(--accent);
+    }
+
+    .s2 .scale-name {
+      color: var(--partial);
+    }
+
+    .s1 .scale-name {
+      color: var(--warn);
+    }
+
+    .s0 .scale-name {
+      color: var(--no);
+    }
 
     .scale-desc {
       font-size: 12.5px;
@@ -400,14 +484,15 @@
       font-family: 'IBM Plex Mono', monospace;
       font-size: 9px;
       font-weight: 600;
-      color: rgba(255,255,255,.5);
+      color: rgba(255, 255, 255, .5);
       text-transform: uppercase;
       letter-spacing: .1em;
       white-space: nowrap;
     }
 
     .example-query-text {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
       font-size: 17px;
       color: white;
     }
@@ -427,9 +512,13 @@
       transition: background .1s;
     }
 
-    .example-doc:last-child { border-bottom: none; }
+    .example-doc:last-child {
+      border-bottom: none;
+    }
 
-    .example-doc-text { flex: 1; }
+    .example-doc-text {
+      flex: 1;
+    }
 
     .example-doc-title {
       font-size: 12.5px;
@@ -455,10 +544,25 @@
       margin-top: 2px;
     }
 
-    .verdict-3 { background: var(--accent-light);  color: var(--accent); }
-    .verdict-2 { background: var(--partial-light); color: var(--partial); }
-    .verdict-1 { background: var(--warn-light);    color: var(--warn); }
-    .verdict-0 { background: var(--no-light);      color: var(--no); }
+    .verdict-3 {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .verdict-2 {
+      background: var(--partial-light);
+      color: var(--partial);
+    }
+
+    .verdict-1 {
+      background: var(--warn-light);
+      color: var(--warn);
+    }
+
+    .verdict-0 {
+      background: var(--no-light);
+      color: var(--no);
+    }
 
     .guide-tips {
       display: flex;
@@ -544,7 +648,11 @@
       transition: all .12s;
     }
 
-    .btn-ghost:hover { border-color: var(--accent-mid); color: var(--accent); background: var(--accent-faint); }
+    .btn-ghost:hover {
+      border-color: var(--accent-mid);
+      color: var(--accent);
+      background: var(--accent-faint);
+    }
 
     /* dot nav */
     .doc-nav {
@@ -568,7 +676,10 @@
       color: var(--text-muted);
     }
 
-    .doc-dot:hover { border-color: var(--accent-mid); color: var(--accent); }
+    .doc-dot:hover {
+      border-color: var(--accent-mid);
+      color: var(--accent);
+    }
 
     .doc-dot.current {
       background: var(--accent-light);
@@ -717,24 +828,74 @@
       text-align: center;
     }
 
-    .jbtn-label { font-size: 13px; font-weight: 500; }
-    .jbtn-score { font-family: 'IBM Plex Mono', monospace; font-size: 10px; opacity: .55; text-align: center; line-height: 1.4; }
+    .jbtn-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
 
-    .jbtn-3 { background: var(--accent-light); color: var(--accent); }
-    .jbtn-3:hover { background: #c6e5d3; }
-    .jbtn-3.active { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(42,92,63,.15); }
+    .jbtn-score {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      opacity: .55;
+      text-align: center;
+      line-height: 1.4;
+    }
 
-    .jbtn-2 { background: var(--partial-light); color: var(--partial); }
-    .jbtn-2:hover { background: #cce5f7; }
-    .jbtn-2.active { border-color: var(--partial); box-shadow: 0 0 0 3px rgba(26,84,120,.15); }
+    .jbtn-3 {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
 
-    .jbtn-1 { background: var(--warn-light); color: var(--warn); }
-    .jbtn-1:hover { background: #f7e8c4; }
-    .jbtn-1.active { border-color: var(--warn); box-shadow: 0 0 0 3px rgba(122,92,20,.15); }
+    .jbtn-3:hover {
+      background: #c6e5d3;
+    }
 
-    .jbtn-0 { background: var(--no-light); color: var(--no); }
-    .jbtn-0:hover { background: #f7d5d5; }
-    .jbtn-0.active { border-color: var(--no); box-shadow: 0 0 0 3px rgba(122,46,46,.15); }
+    .jbtn-3.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(42, 92, 63, .15);
+    }
+
+    .jbtn-2 {
+      background: var(--partial-light);
+      color: var(--partial);
+    }
+
+    .jbtn-2:hover {
+      background: #cce5f7;
+    }
+
+    .jbtn-2.active {
+      border-color: var(--partial);
+      box-shadow: 0 0 0 3px rgba(26, 84, 120, .15);
+    }
+
+    .jbtn-1 {
+      background: var(--warn-light);
+      color: var(--warn);
+    }
+
+    .jbtn-1:hover {
+      background: #f7e8c4;
+    }
+
+    .jbtn-1.active {
+      border-color: var(--warn);
+      box-shadow: 0 0 0 3px rgba(122, 92, 20, .15);
+    }
+
+    .jbtn-0 {
+      background: var(--no-light);
+      color: var(--no);
+    }
+
+    .jbtn-0:hover {
+      background: #f7d5d5;
+    }
+
+    .jbtn-0.active {
+      border-color: var(--no);
+      box-shadow: 0 0 0 3px rgba(122, 46, 46, .15);
+    }
 
     /* doc navigation bar */
     .doc-controls {
@@ -755,7 +916,10 @@
       transition: all .12s;
     }
 
-    .btn-nav:hover { color: var(--text); background: var(--surface-2); }
+    .btn-nav:hover {
+      color: var(--text);
+      background: var(--surface-2);
+    }
 
     .btn-submit {
       padding: 11px 24px;
@@ -770,10 +934,22 @@
       transition: background .15s;
     }
 
-    .btn-submit:hover { background: #1d4229; }
-    .btn-submit:disabled { background: #a5a098; cursor: not-allowed; }
-    .btn-submit.partial { background: var(--warn); }
-    .btn-submit.partial:hover { background: #5c4510; }
+    .btn-submit:hover {
+      background: #1d4229;
+    }
+
+    .btn-submit:disabled {
+      background: #a5a098;
+      cursor: not-allowed;
+    }
+
+    .btn-submit.partial {
+      background: var(--warn);
+    }
+
+    .btn-submit.partial:hover {
+      background: #5c4510;
+    }
 
     /* ── Done screen ─────────────────────────────────── */
     #screen-done {
@@ -792,7 +968,8 @@
     }
 
     .done-title {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
       font-size: 28px;
       margin-bottom: 10px;
     }
@@ -821,7 +998,10 @@
       pointer-events: none;
     }
 
-    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     /* ── Keyboard hint ───────────────────────────────── */
     .kb-hint {
@@ -843,16 +1023,17 @@
     }
   </style>
 </head>
+
 <body>
 
   <script>
     const CONFIG = {
-      API_BASE_URL:            "https://klimakonform-maps.geo.tu-dresden.de/eval",
-      DOCUMENT_API:            "https://klimakonform-maps.geo.tu-dresden.de/eval/document",
-      GITHUB_TOPICS_URL:       "./topics.tsv",
-      GITHUB_QRELS_URL:        "./qrels.txt",
-      QUERIES_PER_ANNOTATOR:   5,
-      DOCS_PER_QUERY:          5,
+      API_BASE_URL: "https://klimakonform-maps.geo.tu-dresden.de/eval",
+      DOCUMENT_API: "https://klimakonform-maps.geo.tu-dresden.de/eval/document",
+      GITHUB_TOPICS_URL: "./topics.tsv",
+      GITHUB_QRELS_URL: "./qrels.txt",
+      QUERIES_PER_ANNOTATOR: 5,
+      DOCS_PER_QUERY: 5,
       MAX_ANNOTATIONS_PER_QUERY: 3,
     };
   </script>
@@ -861,10 +1042,11 @@
   <header>
     <div class="logo">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7"/>
-          <polyline points="2 17 12 22 22 17"/>
-          <polyline points="2 12 12 17 22 12"/>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="white" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
         </svg>
       </div>
       <span class="logo-name">Relevance Annotation</span>
@@ -872,7 +1054,9 @@
     </div>
     <div class="header-right" id="header-progress" style="display:none">
       <span class="progress-text" id="progress-text">0 / 0</span>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
     </div>
   </header>
 
@@ -887,10 +1071,12 @@
     <div class="welcome-card">
       <div class="welcome-eyebrow">Priority IAA Study</div>
       <h1 class="welcome-title">Metadata Relevance Annotation</h1>
-      <p class="welcome-lead">Help improve Earth science data discovery. You'll rate how relevant dataset records are to a given search query. This study is fully anonymous.</p>
+      <p class="welcome-lead">Help improve Earth science data discovery. You'll rate how relevant dataset records are to
+        a given search query. This study is fully anonymous.</p>
 
       <div class="field">
-        <label class="field-label" for="institution">Institution / Organization <span style="opacity:.5">(optional)</span></label>
+        <label class="field-label" for="institution">Institution / Organization <span
+            style="opacity:.5">(optional)</span></label>
         <input type="text" id="institution" placeholder="e.g. TU Dresden, Helmholtz, GFZ…">
       </div>
 
@@ -900,7 +1086,8 @@
           <label class="prof-option"><input type="checkbox" name="profession" value="Researcher"> Researcher</label>
           <label class="prof-option"><input type="checkbox" name="profession" value="Data Manager"> Data Manager</label>
           <label class="prof-option"><input type="checkbox" name="profession" value="Student"> Student</label>
-          <label class="prof-option"><input type="checkbox" name="profession" value="Earth Scientist"> Earth Scientist</label>
+          <label class="prof-option"><input type="checkbox" name="profession" value="Earth Scientist"> Earth
+            Scientist</label>
           <label class="prof-option"><input type="checkbox" name="profession" value="Developer"> Developer</label>
           <label class="prof-option"><input type="checkbox" name="profession" value="Other"> Other</label>
         </div>
@@ -918,7 +1105,8 @@
     <div class="guide-card">
       <div class="guide-eyebrow">Before you start</div>
       <h2 class="guide-title">How to judge relevance</h2>
-      <p class="guide-lead">For each query you'll see 5 dataset records. Read the title and abstract, then decide how well the record would satisfy someone searching for that query.</p>
+      <p class="guide-lead">For each query you'll see 5 dataset records. Read the title and abstract, then decide how
+        well the record would satisfy someone searching for that query.</p>
 
       <!-- Scale -->
       <div class="scale-rows">
@@ -926,28 +1114,32 @@
           <div class="scale-badge">0</div>
           <div class="scale-body">
             <div class="scale-name">Not relevant</div>
-            <div class="scale-desc">The dataset is unrelated to the query. A researcher would not benefit from finding this record.</div>
+            <div class="scale-desc">The dataset is unrelated to the query. A researcher would not benefit from finding
+              this record.</div>
           </div>
         </div>
         <div class="scale-row s1">
           <div class="scale-badge">1</div>
           <div class="scale-body">
             <div class="scale-name">Marginally relevant</div>
-            <div class="scale-desc">The dataset touches the topic but would not typically be selected as a useful result for this query.</div>
+            <div class="scale-desc">The dataset touches the topic but would not typically be selected as a useful result
+              for this query.</div>
           </div>
         </div>
         <div class="scale-row s2">
           <div class="scale-badge">2</div>
           <div class="scale-body">
             <div class="scale-name">Partially relevant</div>
-            <div class="scale-desc">The dataset is related and useful, but only covers part of the query or is a broader/narrower match.</div>
+            <div class="scale-desc">The dataset is related and useful, but only covers part of the query or is a
+              broader/narrower match.</div>
           </div>
         </div>
         <div class="scale-row s3">
           <div class="scale-badge">3</div>
           <div class="scale-body">
             <div class="scale-name">Highly relevant</div>
-            <div class="scale-desc">The dataset directly addresses the query. A researcher would be satisfied finding this record.</div>
+            <div class="scale-desc">The dataset directly addresses the query. A researcher would be satisfied finding
+              this record.</div>
           </div>
         </div>
       </div>
@@ -963,28 +1155,32 @@
           <div class="example-doc">
             <div class="example-doc-text">
               <div class="example-doc-title">Atmospheric CO₂ concentrations at Mauna Loa Observatory</div>
-              <div class="example-doc-why">Different variable, different region — no meaningful connection to the query.</div>
+              <div class="example-doc-why">Different variable, different region — no meaningful connection to the query.
+              </div>
             </div>
             <span class="example-verdict verdict-0">0 — Not rel.</span>
           </div>
           <div class="example-doc">
             <div class="example-doc-text">
               <div class="example-doc-title">European land cover classification 1990–2018</div>
-              <div class="example-doc-why">Covers the region but land cover is only tangentially related to soil moisture.</div>
+              <div class="example-doc-why">Covers the region but land cover is only tangentially related to soil
+                moisture.</div>
             </div>
             <span class="example-verdict verdict-1">1 — Marginal</span>
           </div>
           <div class="example-doc">
             <div class="example-doc-text">
               <div class="example-doc-title">Hydrology and soil properties of the Danube basin</div>
-              <div class="example-doc-why">Central Europe, soil data, but focuses on hydraulic properties rather than moisture measurements.</div>
+              <div class="example-doc-why">Central Europe, soil data, but focuses on hydraulic properties rather than
+                moisture measurements.</div>
             </div>
             <span class="example-verdict verdict-2">2 — Partial</span>
           </div>
           <div class="example-doc">
             <div class="example-doc-text">
               <div class="example-doc-title">Long-term soil moisture time series for Germany 2000–2020</div>
-              <div class="example-doc-why">Exact topic, exact region, long temporal coverage — directly satisfies the query.</div>
+              <div class="example-doc-why">Exact topic, exact region, long temporal coverage — directly satisfies the
+                query.</div>
             </div>
             <span class="example-verdict verdict-3">3 — Highly</span>
           </div>
@@ -993,10 +1189,18 @@
 
       <!-- Tips -->
       <div class="guide-tips">
-        <div class="guide-tip">Judge based on the <strong>metadata only</strong> — title and abstract — not on what you think the dataset might contain.</div>
-        <div class="guide-tip">Use your domain knowledge. If a record seems relevant to you as an expert, trust that judgment.</div>
+        <div class="guide-tip">Judge based on the <strong>metadata only</strong> — title and abstract — not on what you
+          think the dataset might contain.</div>
+        <div class="guide-tip">Use your domain knowledge. If a record seems relevant to you as an expert, trust that
+          judgment.</div>
         <div class="guide-tip">When uncertain between two levels, pick the lower one.</div>
-        <div class="guide-tip">Keyboard shortcuts: <kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">0</kbd>–<kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">3</kbd> to rate, <kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">←</kbd><kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">→</kbd> to navigate documents.</div>
+        <div class="guide-tip">Keyboard shortcuts: <kbd
+            style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">0</kbd>–<kbd
+            style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">3</kbd>
+          to rate, <kbd
+            style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">←</kbd><kbd
+            style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">→</kbd>
+          to navigate documents.</div>
       </div>
 
       <button class="btn-primary" onclick="startAnnotation()">Start annotating →</button>
@@ -1083,7 +1287,8 @@
       <div class="done-icon">✓</div>
       <h2 class="done-title">Annotations saved</h2>
       <p class="done-lead">Thank you for contributing to NFDI4Earth.</p>
-      <button class="btn-primary" style="width:auto; padding:12px 28px" onclick="location.reload()">Start new session</button>
+      <button class="btn-primary" style="width:auto; padding:12px 28px" onclick="location.reload()">Start new
+        session</button>
     </div>
   </div>
 
@@ -1092,21 +1297,21 @@
   <script>
     // ── State ──────────────────────────────────────────────────────────────────
     const state = {
-      annotator:       '',
-      profession:      '',
-      institution:     '',
-      startTime:       null,
+      annotator: '',
+      profession: '',
+      institution: '',
+      startTime: null,
       assignedQueries: [],
-      qIdx:            0,
-      dIdx:            0,
-      judgments:       {},
+      qIdx: 0,
+      dIdx: 0,
+      judgments: {},
     };
 
-    let allTopics          = [];
-    let allQrels           = {};
-    let coverageData       = {};
-    let saturatedQids      = new Set();
-    const docCache         = {};
+    let allTopics = [];
+    let allQrels = {};
+    let coverageData = {};
+    let saturatedQids = new Set();
+    const docCache = {};
 
     // ── Data loading ───────────────────────────────────────────────────────────
     async function init() {
@@ -1156,14 +1361,11 @@
         const r = await fetch(`${CONFIG.API_BASE_URL}/annotations/coverage`);
         if (!r.ok) return;
         coverageData = await r.json();
-        Object.entries(coverageData).forEach(([qid, count]) => {
-          if (count >= CONFIG.MAX_ANNOTATIONS_PER_QUERY) saturatedQids.add(qid);
-        });
+        // No longer need saturatedQids set here
       } catch {
-        // Non-fatal — proceed without coverage data
+        coverageData = {};
       }
     }
-
     // ── Document fetching ──────────────────────────────────────────────────────
     async function fetchDocument(id) {
       if (docCache[id]) return docCache[id];
@@ -1194,7 +1396,7 @@
       btn.textContent = 'Sampling queries…';
 
       try {
-        state.annotator  = 'Anon-' + Math.floor(1000 + Math.random() * 9000);
+        state.annotator = 'Anon-' + Math.floor(1000 + Math.random() * 9000);
         state.profession = profs.join(', ');
         state.institution = document.getElementById('institution').value.trim() || 'Unspecified';
 
@@ -1217,34 +1419,68 @@
     }
 
     async function sampleQueries() {
-      // Sort: lower coverage first (prioritise under-annotated), shuffle ties
-      const pool = allTopics
-        .filter(t => !saturatedQids.has(t.qid))
-        .sort((a, b) => {
-          const cA = coverageData[a.qid] ?? 0;
-          const cB = coverageData[b.qid] ?? 0;
-          return cA !== cB ? cA - cB : Math.random() - 0.5;
+      // 1. Prepare a list of all potential Query-Doc pairs from allQrels
+      // We want to score each query based on how much "in-progress" work it has
+      const queryPool = allTopics.map(topic => {
+        const docs = allQrels[topic.qid] || [];
+
+        // For each doc in this query, get its current coverage count
+        const docSelection = docs.map(d => ({
+          ...d,
+          count: (coverageData[topic.qid] && coverageData[topic.qid][d.doc_id]) || 0
+        }));
+
+        // Filter out docs that already have 3 or more annotations
+        const availableDocs = docSelection.filter(d => d.count < CONFIG.MAX_ANNOTATIONS_PER_QUERY);
+
+        // Score the query: 
+        // We prioritize queries that have docs with 1 or 2 annotations (count > 0)
+        // This satisfies "prioritize existing pairs"
+        const inProgressCount = availableDocs.filter(d => d.count > 0).length;
+
+        return {
+          ...topic,
+          availableDocs,
+          inProgressCount
+        };
+      });
+
+      // 2. Sort Queries: 
+      // Primary sort: Queries with most "in-progress" docs first
+      // Secondary sort: Randomize to avoid bias
+      queryPool.sort((a, b) => {
+        if (b.inProgressCount !== a.inProgressCount) {
+          return b.inProgressCount - a.inProgressCount;
+        }
+        return Math.random() - 0.5;
+      });
+
+      const selectedQueries = [];
+
+      for (const topic of queryPool) {
+        if (selectedQueries.length >= CONFIG.QUERIES_PER_ANNOTATOR) break;
+        if (topic.availableDocs.length < CONFIG.DOCS_PER_QUERY) continue;
+
+        // 3. Sort Documents within the chosen query:
+        // We want the docs with 1 or 2 labels first, then 0 labels.
+        const sortedDocs = [...topic.availableDocs].sort((a, b) => {
+          return b.count - a.count; // 2 then 1 then 0
         });
 
-      const selected = [];
-      for (const topic of pool) {
-        if (selected.length >= CONFIG.QUERIES_PER_ANNOTATOR) break;
-
-        const candidates = (allQrels[topic.qid] || []).sort(() => Math.random() - 0.5);
-        const validDocs = [];
-
-        for (const entry of candidates) {
-          if (validDocs.length >= CONFIG.DOCS_PER_QUERY) break;
-          const doc = await fetchDocument(entry.doc_id);
-          if (doc) validDocs.push(entry);
+        // Take the top N docs
+        const finalDocs = [];
+        for (const entry of sortedDocs) {
+          if (finalDocs.length >= CONFIG.DOCS_PER_QUERY) break;
+          const docContent = await fetchDocument(entry.doc_id);
+          if (docContent) finalDocs.push(entry);
         }
 
-        if (validDocs.length >= CONFIG.DOCS_PER_QUERY) {
-          selected.push({ ...topic, docs: validDocs });
+        if (finalDocs.length >= CONFIG.DOCS_PER_QUERY) {
+          selectedQueries.push({ ...topic, docs: finalDocs });
         }
       }
 
-      return selected;
+      return selectedQueries;
     }
 
     async function startAnnotation() {
@@ -1268,7 +1504,7 @@
       dotsEl.innerHTML = '';
       q.docs.forEach((doc, idx) => {
         const dot = document.createElement('div');
-        const judged  = state.judgments[judgmentKey(q.qid, doc.doc_id)] !== undefined;
+        const judged = state.judgments[judgmentKey(q.qid, doc.doc_id)] !== undefined;
         const current = idx === state.dIdx;
         dot.className = ['doc-dot', current ? 'current' : '', judged ? 'judged' : ''].join(' ').trim();
         dot.textContent = idx + 1;
@@ -1282,7 +1518,7 @@
         `${state.dIdx + 1} of ${q.docs.length}`;
 
       const data = await fetchDocument(d.doc_id);
-      document.getElementById('doc-title').textContent    = data?.title    ?? `Document ${d.doc_id}`;
+      document.getElementById('doc-title').textContent = data?.title ?? `Document ${d.doc_id}`;
       document.getElementById('doc-abstract').textContent = data?.abstract ?? 'Abstract unavailable.';
 
       // Judgment buttons
@@ -1298,8 +1534,8 @@
 
     // ── Judgment logic ─────────────────────────────────────────────────────────
     function judge(score) {
-      const q   = state.assignedQueries[state.qIdx];
-      const d   = q.docs[state.dIdx];
+      const q = state.assignedQueries[state.qIdx];
+      const d = q.docs[state.dIdx];
       const key = judgmentKey(q.qid, d.doc_id);
 
       const alreadyJudged = state.judgments[key] !== undefined;
@@ -1339,15 +1575,15 @@
     // ── Progress & submit ──────────────────────────────────────────────────────
     function updateProgress() {
       const total = state.assignedQueries.reduce((sum, q) => sum + q.docs.length, 0);
-      const done  = Object.keys(state.judgments).length;
+      const done = Object.keys(state.judgments).length;
       document.getElementById('progress-text').textContent = `${done} / ${total}`;
       document.getElementById('progress-fill').style.width = `${(done / total) * 100}%`;
     }
 
     function updateSubmitButton() {
-      const total   = state.assignedQueries.reduce((sum, q) => sum + q.docs.length, 0);
-      const done    = Object.keys(state.judgments).length;
-      const btn     = document.getElementById('btn-submit');
+      const total = state.assignedQueries.reduce((sum, q) => sum + q.docs.length, 0);
+      const done = Object.keys(state.judgments).length;
+      const btn = document.getElementById('btn-submit');
       const partial = done < total;
       btn.classList.toggle('partial', partial);
       btn.textContent = partial
@@ -1356,19 +1592,19 @@
     }
 
     async function submitAll() {
-      const ts   = new Date().toISOString();
+      const ts = new Date().toISOString();
       const rows = Object.entries(state.judgments).map(([key, score]) => {
         const [qid, doc_id] = key.split('__');
         const q = state.assignedQueries.find(i => i.qid === qid);
         return {
-          annotator:   state.annotator,
-          profession:  state.profession,
+          annotator: state.annotator,
+          profession: state.profession,
           institution: state.institution,
           qid,
-          query:       q?.query ?? '',
+          query: q?.query ?? '',
           doc_id,
           score,
-          timestamp:   ts,
+          timestamp: ts,
         };
       });
 
@@ -1378,9 +1614,9 @@
 
       try {
         const r = await fetch(`${CONFIG.API_BASE_URL}/annotations`, {
-          method:  'POST',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ rows }),
+          body: JSON.stringify({ rows }),
         });
         if (r.ok) {
           showScreen('done');
@@ -1399,9 +1635,9 @@
     document.addEventListener('keydown', e => {
       if (!document.getElementById('screen-annotate').classList.contains('active')) return;
       if (e.target.tagName === 'INPUT') return;
-      if (['0','1','2','3'].includes(e.key)) judge(parseInt(e.key));
+      if (['0', '1', '2', '3'].includes(e.key)) judge(parseInt(e.key));
       if (e.key === 'ArrowRight') navigateDoc(1);
-      if (e.key === 'ArrowLeft')  navigateDoc(-1);
+      if (e.key === 'ArrowLeft') navigateDoc(-1);
     });
 
     // ── UI helpers ─────────────────────────────────────────────────────────────
@@ -1433,4 +1669,5 @@
     init();
   </script>
 </body>
+
 </html>
