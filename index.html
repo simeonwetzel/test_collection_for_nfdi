@@ -408,7 +408,7 @@
 
     .example-query-text {
       font-family: 'DM Sans', sans-serif; font-weight: 600;
-      font-size: 16px;
+      font-size: 17px;
       color: white;
     }
 
@@ -497,55 +497,13 @@
 
     /* ── Sidebar ──────────────────────────────────────── */
     .sidebar {
-      width: 272px;
+      width: 220px;
       flex-shrink: 0;
       position: sticky;
       top: 68px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-    }
-
-    /* Query panel — accented to make it stand out */
-    .query-panel {
-      background: var(--accent);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .query-panel-meta {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9.5px;
-      font-weight: 600;
-      color: rgba(255,255,255,.5);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      margin-bottom: 6px;
-    }
-
-    .query-panel-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px;
-      font-weight: 600;
-      color: rgba(255,255,255,.4);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      margin-bottom: 5px;
-    }
-
-    .query-index {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      color: rgba(255,255,255,.55);
-      margin-bottom: 6px;
-    }
-
-    .query-text {
-      font-family: 'DM Sans', sans-serif; font-weight: 600;
-      font-size: 18px;
-      line-height: 1.45;
-      color: #ffffff;
     }
 
     /* plain panel */
@@ -566,6 +524,27 @@
       letter-spacing: .08em;
       margin-bottom: 10px;
     }
+
+    /* query nav */
+    .query-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      padding: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .12s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent-mid); color: var(--accent); background: var(--accent-faint); }
 
     /* dot nav */
     .doc-nav {
@@ -609,51 +588,82 @@
       border-color: var(--accent);
     }
 
-    /* query nav */
-    .query-nav {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .btn-ghost {
-      padding: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all .12s;
-    }
-
-    .btn-ghost:hover { border-color: var(--accent-mid); color: var(--accent); background: var(--accent-faint); }
-
     /* ── Main content ─────────────────────────────────── */
     .main {
       flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
     }
 
-    /* document card */
+    /* ── Query chip above document ────────────────────── */
+    .query-chip {
+      background: var(--accent);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 12px 20px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .query-chip-tag {
+      flex-shrink: 0;
+      margin-top: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: black;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      background: rgba(255, 255, 255);
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .query-chip-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #ffffff;
+    }
+
+    /* ── Document card (attached below query chip) ────── */
     .doc-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px 30px;
+      border-top: none;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      padding: 20px 24px 24px;
       box-shadow: var(--shadow);
-      min-height: 200px;
     }
 
-    .doc-number {
+    .doc-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .doc-card-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: black;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      background: white;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .doc-card-num {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 10px;
       color: var(--text-faint);
-      margin-bottom: 10px;
     }
 
     .doc-title {
@@ -661,8 +671,8 @@
       font-size: 22px;
       font-weight: 600;
       line-height: 1.3;
-      color: var(--accent);
-      margin-bottom: 14px;
+      color: var(--text);
+      margin-bottom: 12px;
     }
 
     .doc-abstract {
@@ -912,18 +922,11 @@
 
       <!-- Scale -->
       <div class="scale-rows">
-        <div class="scale-row s3">
-          <div class="scale-badge">3</div>
+        <div class="scale-row s0">
+          <div class="scale-badge">0</div>
           <div class="scale-body">
-            <div class="scale-name">Highly relevant</div>
-            <div class="scale-desc">The dataset directly addresses the query. A researcher would be satisfied finding this record.</div>
-          </div>
-        </div>
-        <div class="scale-row s2">
-          <div class="scale-badge">2</div>
-          <div class="scale-body">
-            <div class="scale-name">Partially relevant</div>
-            <div class="scale-desc">The dataset is related and useful, but only covers part of the query or is a broader/narrower match.</div>
+            <div class="scale-name">Not relevant</div>
+            <div class="scale-desc">The dataset is unrelated to the query. A researcher would not benefit from finding this record.</div>
           </div>
         </div>
         <div class="scale-row s1">
@@ -933,11 +936,18 @@
             <div class="scale-desc">The dataset touches the topic but would not typically be selected as a useful result for this query.</div>
           </div>
         </div>
-        <div class="scale-row s0">
-          <div class="scale-badge">0</div>
+        <div class="scale-row s2">
+          <div class="scale-badge">2</div>
           <div class="scale-body">
-            <div class="scale-name">Not relevant</div>
-            <div class="scale-desc">The dataset is unrelated to the query. A researcher would not benefit from finding this record.</div>
+            <div class="scale-name">Partially relevant</div>
+            <div class="scale-desc">The dataset is related and useful, but only covers part of the query or is a broader/narrower match.</div>
+          </div>
+        </div>
+        <div class="scale-row s3">
+          <div class="scale-badge">3</div>
+          <div class="scale-body">
+            <div class="scale-name">Highly relevant</div>
+            <div class="scale-desc">The dataset directly addresses the query. A researcher would be satisfied finding this record.</div>
           </div>
         </div>
       </div>
@@ -952,17 +962,10 @@
         <div class="example-docs">
           <div class="example-doc">
             <div class="example-doc-text">
-              <div class="example-doc-title">Long-term soil moisture time series for Germany 2000–2020</div>
-              <div class="example-doc-why">Exact topic, exact region, long temporal coverage — directly satisfies the query.</div>
+              <div class="example-doc-title">Atmospheric CO₂ concentrations at Mauna Loa Observatory</div>
+              <div class="example-doc-why">Different variable, different region — no meaningful connection to the query.</div>
             </div>
-            <span class="example-verdict verdict-3">3 — Highly</span>
-          </div>
-          <div class="example-doc">
-            <div class="example-doc-text">
-              <div class="example-doc-title">Hydrology and soil properties of the Danube basin</div>
-              <div class="example-doc-why">Central Europe, soil data, but focuses on hydraulic properties rather than moisture measurements.</div>
-            </div>
-            <span class="example-verdict verdict-2">2 — Partial</span>
+            <span class="example-verdict verdict-0">0 — Not rel.</span>
           </div>
           <div class="example-doc">
             <div class="example-doc-text">
@@ -973,10 +976,17 @@
           </div>
           <div class="example-doc">
             <div class="example-doc-text">
-              <div class="example-doc-title">Atmospheric CO₂ concentrations at Mauna Loa Observatory</div>
-              <div class="example-doc-why">Different variable, different region — no meaningful connection to the query.</div>
+              <div class="example-doc-title">Hydrology and soil properties of the Danube basin</div>
+              <div class="example-doc-why">Central Europe, soil data, but focuses on hydraulic properties rather than moisture measurements.</div>
             </div>
-            <span class="example-verdict verdict-0">0 — Not rel.</span>
+            <span class="example-verdict verdict-2">2 — Partial</span>
+          </div>
+          <div class="example-doc">
+            <div class="example-doc-text">
+              <div class="example-doc-title">Long-term soil moisture time series for Germany 2000–2020</div>
+              <div class="example-doc-why">Exact topic, exact region, long temporal coverage — directly satisfies the query.</div>
+            </div>
+            <span class="example-verdict verdict-3">3 — Highly</span>
           </div>
         </div>
       </div>
@@ -996,23 +1006,15 @@
   <!-- Annotate -->
   <div id="screen-annotate" class="screen">
 
-    <!-- Sidebar -->
+    <!-- Sidebar: docs + query nav only -->
     <div class="sidebar">
 
-      <!-- Query — prominent green panel -->
-      <div class="query-panel">
-        <div class="query-panel-label">Search query</div>
-        <div class="query-index" id="query-index">— / —</div>
-        <div class="query-text" id="query-text">…</div>
-      </div>
-
-      <!-- Doc dots -->
       <div class="panel">
-        <div class="panel-label">Documents</div>
+        <div class="panel-label">Query <span id="query-index" style="opacity:.6; font-weight:400">— / —</span></div>
+        <div class="panel-label" style="margin-top:10px;">Documents</div>
         <div class="doc-nav" id="doc-dots"></div>
       </div>
 
-      <!-- Query navigation -->
       <div class="query-nav">
         <button class="btn-ghost" onclick="changeQuery(-1)">← Prev query</button>
         <button class="btn-ghost" onclick="changeQuery(1)">Next query →</button>
@@ -1023,32 +1025,41 @@
     <!-- Main -->
     <div class="main">
 
-      <!-- Document -->
-      <div class="doc-card">
-        <div class="doc-number" id="doc-number">Document — of —</div>
-        <div class="doc-title" id="doc-title">Loading…</div>
-        <div class="doc-abstract" id="doc-abstract"></div>
+      <!-- Query chip + doc card as one connected block -->
+      <div>
+        <div class="query-chip">
+          <span class="query-chip-tag">Search query</span>
+          <span class="query-chip-text" id="query-text">…</span>
+        </div>
+        <div class="doc-card">
+          <div class="doc-card-header">
+            <span class="doc-card-tag">Dataset record</span>
+            <span class="doc-card-num" id="doc-number">— of —</span>
+          </div>
+          <div class="doc-title" id="doc-title">Loading…</div>
+          <div class="doc-abstract" id="doc-abstract"></div>
+        </div>
       </div>
 
       <!-- Judgment -->
       <div class="judgment-card">
-        <div class="judgment-label">How relevant is this record to the search query on the left?</div>
+        <div class="judgment-label">How relevant is this dataset record to the search query above?</div>
         <div class="judgment-btns">
-          <button class="jbtn jbtn-3" onclick="judge(3)" id="btn-3" title="Keyboard: 3">
-            <span class="jbtn-label">Highly relevant</span>
-            <span class="jbtn-score">3 — directly answers the query</span>
-          </button>
-          <button class="jbtn jbtn-2" onclick="judge(2)" id="btn-2" title="Keyboard: 2">
-            <span class="jbtn-label">Partially relevant</span>
-            <span class="jbtn-score">2 — related but incomplete</span>
+          <button class="jbtn jbtn-0" onclick="judge(0)" id="btn-0" title="Keyboard: 0">
+            <span class="jbtn-label">Not relevant</span>
+            <span class="jbtn-score">0 — unrelated to query</span>
           </button>
           <button class="jbtn jbtn-1" onclick="judge(1)" id="btn-1" title="Keyboard: 1">
             <span class="jbtn-label">Marginally relevant</span>
             <span class="jbtn-score">1 — tangentially related</span>
           </button>
-          <button class="jbtn jbtn-0" onclick="judge(0)" id="btn-0" title="Keyboard: 0">
-            <span class="jbtn-label">Not relevant</span>
-            <span class="jbtn-score">0 — unrelated to query</span>
+          <button class="jbtn jbtn-2" onclick="judge(2)" id="btn-2" title="Keyboard: 2">
+            <span class="jbtn-label">Partially relevant</span>
+            <span class="jbtn-score">2 — related but incomplete</span>
+          </button>
+          <button class="jbtn jbtn-3" onclick="judge(3)" id="btn-3" title="Keyboard: 3">
+            <span class="jbtn-label">Highly relevant</span>
+            <span class="jbtn-score">3 — directly answers the query</span>
           </button>
         </div>
       </div>
@@ -1249,7 +1260,7 @@
 
       // Query panel
       document.getElementById('query-index').textContent =
-        `Query ${q.qid} · ${state.qIdx + 1} of ${state.assignedQueries.length}`;
+        `${state.qIdx + 1} / ${state.assignedQueries.length}`;
       document.getElementById('query-text').textContent = q.query;
 
       // Dot nav
@@ -1268,7 +1279,7 @@
 
       // Document content
       document.getElementById('doc-number').textContent =
-        `Document ${state.dIdx + 1} of ${q.docs.length}`;
+        `${state.dIdx + 1} of ${q.docs.length}`;
 
       const data = await fetchDocument(d.doc_id);
       document.getElementById('doc-title').textContent    = data?.title    ?? `Document ${d.doc_id}`;
