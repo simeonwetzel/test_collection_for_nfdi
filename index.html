@@ -4,115 +4,888 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relevance Annotation — NFDI4Earth</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #f5f3ef;
-      --surface: #ffffff;
-      --border: #d6d0c4;
-      --text: #1a1814;
-      --text-muted: #7a7468;
-      --accent: #2d5a3d;
-      --accent-light: #e8f0eb;
-      --warn: #8b6914;
-      --warn-light: #fdf0e8;
-      --no-color: #7a3030;
-      --shadow: 0 1px 3px rgba(0, 0, 0, .08), 0 4px 16px rgba(0, 0, 0, .04);
+      --bg:           #f0ede8;
+      --surface:      #faf9f6;
+      --surface-2:    #f3f0eb;
+      --border:       #ddd8cf;
+      --border-soft:  #e8e4de;
+      --text:         #1c1a17;
+      --text-muted:   #7c7469;
+      --text-faint:   #b0a89e;
+      --accent:       #2a5c3f;
+      --accent-mid:   #3a7a55;
+      --accent-light: #dff0e7;
+      --accent-faint: #eef6f1;
+      --warn:         #7a5c14;
+      --warn-light:   #fdf4e3;
+      --no:           #7a2e2e;
+      --no-light:     #fdeaea;
+      --partial:      #1a5478;
+      --partial-light:#e5f2fb;
+      --shadow-sm:    0 1px 2px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
+      --shadow:       0 2px 4px rgba(0,0,0,.05), 0 6px 24px rgba(0,0,0,.06);
+      --shadow-lg:    0 4px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08);
+      --radius:       10px;
+      --radius-lg:    14px;
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 12px; }
-    .logo-mark { width: 32px; height: 32px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; fill: white; }
-    .logo-title { font-family: 'Libre Baskerville', serif; font-size: 15px; font-weight: 700; }
-    .logo-sub { font-size: 11px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
-    .progress-wrap { display: flex; align-items: center; gap: 10px; }
-    .progress-label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-muted); }
-    .progress-bar { width: 140px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .3s; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+    }
+
+    .logo-icon svg { display: block; }
+
+    .logo-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 15px;
+      letter-spacing: 0.01em;
+    }
+
+    .logo-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-faint);
+      padding: 2px 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .progress-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .progress-track {
+      width: 120px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width .4s ease;
+    }
+
+    /* ── Screens ─────────────────────────────────────── */
     .screen { display: none; flex: 1; flex-direction: column; }
     .screen.active { display: flex; }
-    #screen-loading { align-items: center; justify-content: center; gap: 16px; }
-    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+
+    /* ── Loading ─────────────────────────────────────── */
+    #screen-loading {
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
-    #screen-welcome { align-items: center; justify-content: center; padding: 40px 20px; }
-    .welcome-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 640px; width: 100%; box-shadow: var(--shadow); }
-    .welcome-card h1 { font-family: 'Libre Baskerville', serif; font-size: 24px; margin-bottom: 8px; }
-    .lead { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
-    .field { margin-bottom: 18px; }
-    .field label { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; }
-    .field input[type="text"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); outline: none; font-family: 'DM Sans', sans-serif; }
-    .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: var(--bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border); }
-    .prof-option { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; color: var(--text); }
-    #screen-annotate { padding: 24px 32px; gap: 20px; flex-direction: row; max-width: 1200px; margin: 0 auto; width: 100%; }
-    .query-panel { width: 280px; flex-shrink: 0; position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
-    .query-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--shadow); }
-    .query-text { font-family: 'Libre Baskerville', serif; font-size: 15px; line-height: 1.5; }
-    .main-panel { flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-    .doc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; box-shadow: var(--shadow); min-height: 250px; }
-    .doc-title { font-family: 'Libre Baskerville', serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; color: var(--accent); }
-    .doc-abstract { font-size: 14px; line-height: 1.7; color: #3a3530; }
-    .judgment-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
-    .judgment-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .jbtn { padding: 12px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .15s; }
-    .jbtn.sel { outline: 2px solid var(--text); outline-offset: 2px; }
-    .jbtn.b3 { background: var(--accent-light); color: var(--accent); }
-    .jbtn.b0 { background: #fce8e8; color: var(--no-color); }
-    .btn-submit { padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all .2s; }
-    .btn-submit:hover { background: #1e3d29; }
-    .btn-submit.incomplete { background: #a5a098; }
-    .doc-dot { width: 26px; height: 26px; border-radius: 4px; background: #eeebe6; border: 1px solid var(--border); font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .doc-dot.current { border-color: var(--accent); background: var(--accent-light); font-weight: bold; }
-    .doc-dot.judged { background: #d0e0d5; border-color: var(--accent); }
-    .toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 1000; }
-    .toast.show { opacity: 1; }
+
+    .loading-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Welcome ─────────────────────────────────────── */
+    #screen-welcome {
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+    }
+
+    .welcome-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .welcome-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-mid);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .welcome-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .welcome-lead {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    .field-label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+
+    .field input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .field input[type="text"]:focus { border-color: var(--accent-mid); }
+
+    .prof-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .prof-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+
+    .prof-option:has(input:checked) {
+      background: var(--accent-faint);
+      border-color: var(--accent-mid);
+      color: var(--accent);
+    }
+
+    .prof-option input { display: none; }
+
+    .divider { height: 1px; background: var(--border-soft); margin: 24px 0; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s;
+      letter-spacing: .01em;
+    }
+
+    .btn-primary:hover { background: #1d4229; }
+    .btn-primary:disabled { background: #a5a098; cursor: not-allowed; }
+
+    .field-error {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--no);
+      display: none;
+    }
+
+    /* ── Guide screen ─────────────────────────────────── */
+    #screen-guide {
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+    }
+
+    .guide-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .guide-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-mid);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .guide-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .guide-lead {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Scale table */
+    .scale-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .scale-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+
+    .scale-row.s3 { background: var(--accent-light);  border-color: #b8dcc6; }
+    .scale-row.s2 { background: var(--partial-light); border-color: #b8d8ee; }
+    .scale-row.s1 { background: var(--warn-light);    border-color: #e8d4a0; }
+    .scale-row.s0 { background: var(--no-light);      border-color: #e8c0c0; }
+
+    .scale-badge {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .s3 .scale-badge { background: var(--accent);   color: white; }
+    .s2 .scale-badge { background: var(--partial);  color: white; }
+    .s1 .scale-badge { background: var(--warn);     color: white; }
+    .s0 .scale-badge { background: var(--no);       color: white; }
+
+    .scale-body { flex: 1; }
+
+    .scale-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .s3 .scale-name { color: var(--accent); }
+    .s2 .scale-name { color: var(--partial); }
+    .s1 .scale-name { color: var(--warn); }
+    .s0 .scale-name { color: var(--no); }
+
+    .scale-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Example block */
+    .example-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .example-header {
+      padding: 10px 16px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .example-query-row {
+      padding: 12px 16px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .example-query-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      white-space: nowrap;
+    }
+
+    .example-query-text {
+      font-family: 'Instrument Serif', serif;
+      font-size: 14px;
+      color: white;
+    }
+
+    .example-docs {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .example-doc {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-soft);
+      transition: background .1s;
+    }
+
+    .example-doc:last-child { border-bottom: none; }
+
+    .example-doc-text { flex: 1; }
+
+    .example-doc-title {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 1px;
+    }
+
+    .example-doc-why {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .example-verdict {
+      flex-shrink: 0;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .verdict-3 { background: var(--accent-light);  color: var(--accent); }
+    .verdict-2 { background: var(--partial-light); color: var(--partial); }
+    .verdict-1 { background: var(--warn-light);    color: var(--warn); }
+    .verdict-0 { background: var(--no-light);      color: var(--no); }
+
+    .guide-tips {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+
+    .guide-tip {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .guide-tip::before {
+      content: '→';
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-mid);
+      flex-shrink: 0;
+    }
+
+    /* ── Annotate layout ─────────────────────────────── */
+    #screen-annotate {
+      flex-direction: row;
+      padding: 24px 28px;
+      gap: 20px;
+      max-width: 1160px;
+      margin: 0 auto;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    /* ── Sidebar ──────────────────────────────────────── */
+    .sidebar {
+      width: 272px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 68px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Query panel — accented to make it stand out */
+    .query-panel {
+      background: var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .query-panel-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,.5);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 6px;
+    }
+
+    .query-panel-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      color: rgba(255,255,255,.4);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 5px;
+    }
+
+    .query-index {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 6px;
+    }
+
+    .query-text {
+      font-family: 'Instrument Serif', serif;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #ffffff;
+    }
+
+    /* plain panel */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+
+    /* dot nav */
+    .doc-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .doc-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all .12s;
+      color: var(--text-muted);
+    }
+
+    .doc-dot:hover { border-color: var(--accent-mid); color: var(--accent); }
+
+    .doc-dot.current {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .doc-dot.judged {
+      background: var(--accent-faint);
+      border-color: var(--accent-mid);
+      color: var(--accent-mid);
+    }
+
+    .doc-dot.judged.current {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    /* query nav */
+    .query-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      padding: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .12s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent-mid); color: var(--accent); background: var(--accent-faint); }
+
+    /* ── Main content ─────────────────────────────────── */
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* document card */
+    .doc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      box-shadow: var(--shadow);
+      min-height: 200px;
+    }
+
+    .doc-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-faint);
+      margin-bottom: 10px;
+    }
+
+    .doc-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .doc-abstract {
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: #3d3830;
+    }
+
+    /* judgment card */
+    .judgment-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .judgment-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .judgment-btns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .jbtn {
+      padding: 13px 10px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all .12s;
+      font-family: 'DM Sans', sans-serif;
+      text-align: center;
+    }
+
+    .jbtn-label { font-size: 13px; font-weight: 500; }
+    .jbtn-score { font-family: 'IBM Plex Mono', monospace; font-size: 10px; opacity: .55; text-align: center; line-height: 1.4; }
+
+    .jbtn-3 { background: var(--accent-light); color: var(--accent); }
+    .jbtn-3:hover { background: #c6e5d3; }
+    .jbtn-3.active { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(42,92,63,.15); }
+
+    .jbtn-2 { background: var(--partial-light); color: var(--partial); }
+    .jbtn-2:hover { background: #cce5f7; }
+    .jbtn-2.active { border-color: var(--partial); box-shadow: 0 0 0 3px rgba(26,84,120,.15); }
+
+    .jbtn-1 { background: var(--warn-light); color: var(--warn); }
+    .jbtn-1:hover { background: #f7e8c4; }
+    .jbtn-1.active { border-color: var(--warn); box-shadow: 0 0 0 3px rgba(122,92,20,.15); }
+
+    .jbtn-0 { background: var(--no-light); color: var(--no); }
+    .jbtn-0:hover { background: #f7d5d5; }
+    .jbtn-0.active { border-color: var(--no); box-shadow: 0 0 0 3px rgba(122,46,46,.15); }
+
+    /* doc navigation bar */
+    .doc-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-nav {
+      padding: 8px 14px;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all .12s;
+    }
+
+    .btn-nav:hover { color: var(--text); background: var(--surface-2); }
+
+    .btn-submit {
+      padding: 11px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .btn-submit:hover { background: #1d4229; }
+    .btn-submit:disabled { background: #a5a098; cursor: not-allowed; }
+    .btn-submit.partial { background: var(--warn); }
+    .btn-submit.partial:hover { background: #5c4510; }
+
+    /* ── Done screen ─────────────────────────────────── */
+    #screen-done {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .done-card {
+      text-align: center;
+      padding: 48px;
+    }
+
+    .done-icon {
+      font-size: 52px;
+      margin-bottom: 18px;
+    }
+
+    .done-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .done-lead {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Toast ───────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--text);
+      color: #f0ede8;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-family: 'IBM Plex Mono', monospace;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Keyboard hint ───────────────────────────────── */
+    .kb-hint {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-faint);
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: inherit;
+    }
   </style>
 </head>
 <body>
 
   <script>
     const CONFIG = {
-      API_BASE_URL: "https://klimakonform-maps.geo.tu-dresden.de/eval",
-      DOCUMENT_API: "https://klimakonform-maps.geo.tu-dresden.de/eval/document",
-      GITHUB_TOPICS_URL: "./topics.tsv",
-      GITHUB_QRELS_URL: "./qrels.txt",
-      QUERIES_PER_ANNOTATOR: 5,
-      DOCS_PER_QUERY: 5,
+      API_BASE_URL:            "https://klimakonform-maps.geo.tu-dresden.de/eval",
+      DOCUMENT_API:            "https://klimakonform-maps.geo.tu-dresden.de/eval/document",
+      GITHUB_TOPICS_URL:       "./topics.tsv",
+      GITHUB_QRELS_URL:        "./qrels.txt",
+      QUERIES_PER_ANNOTATOR:   5,
+      DOCS_PER_QUERY:          5,
       MAX_ANNOTATIONS_PER_QUERY: 3,
     };
   </script>
 
+  <!-- Header -->
   <header>
     <div class="logo">
-      <div class="logo-mark"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-      <div>
-        <div class="logo-title">Relevance Annotation</div>
-        <div class="logo-sub">NFDI4Earth · Priority IAA</div>
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7"/>
+          <polyline points="2 17 12 22 22 17"/>
+          <polyline points="2 12 12 17 22 12"/>
+        </svg>
       </div>
+      <span class="logo-name">Relevance Annotation</span>
+      <span class="logo-tag">NFDI4Earth</span>
     </div>
-    <div class="progress-wrap" id="progress-wrap" style="display:none">
-      <span class="progress-label" id="progress-label">0 / 0</span>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="header-right" id="header-progress" style="display:none">
+      <span class="progress-text" id="progress-text">0 / 0</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
   </header>
 
+  <!-- Loading -->
   <div id="screen-loading" class="screen active">
     <div class="spinner"></div>
-    <div class="loading-msg" id="loading-msg">Initializing...</div>
+    <div class="loading-text" id="loading-msg">Initializing…</div>
   </div>
 
+  <!-- Welcome -->
   <div id="screen-welcome" class="screen">
     <div class="welcome-card">
-      <h1>Metadata Relevance Study</h1>
-      <p class="lead">Help us improve Earth science discovery. This study is <strong>anonymous</strong>.</p>
-      
+      <div class="welcome-eyebrow">Priority IAA Study</div>
+      <h1 class="welcome-title">Metadata Relevance Annotation</h1>
+      <p class="welcome-lead">Help improve Earth science data discovery. You'll rate how relevant dataset records are to a given search query. This study is fully anonymous.</p>
+
       <div class="field">
-        <label>Institution / Organization (Optional)</label>
-        <input type="text" id="institution" placeholder="e.g. TU Dresden, PIK, etc.">
+        <label class="field-label" for="institution">Institution / Organization <span style="opacity:.5">(optional)</span></label>
+        <input type="text" id="institution" placeholder="e.g. TU Dresden, Helmholtz, GFZ…">
       </div>
 
       <div class="field">
-        <label>Your Profession / Background</label>
+        <label class="field-label">Your background <span style="color:var(--no); opacity:.8">*</span></label>
         <div class="prof-grid">
           <label class="prof-option"><input type="checkbox" name="profession" value="Researcher"> Researcher</label>
           <label class="prof-option"><input type="checkbox" name="profession" value="Data Manager"> Data Manager</label>
@@ -123,212 +896,529 @@
         </div>
       </div>
 
-      <button class="btn-submit" id="btn-start" style="width:100%" onclick="assignAndStart()">Start Annotation →</button>
-      <div id="start-error" style="color:var(--no-color); font-size:12px; margin-top:10px; display:none;"></div>
+      <div class="divider"></div>
+
+      <button class="btn-primary" id="btn-start" onclick="handleStart()">Begin annotation →</button>
+      <div class="field-error" id="start-error"></div>
     </div>
   </div>
 
+  <!-- Guide -->
+  <div id="screen-guide" class="screen">
+    <div class="guide-card">
+      <div class="guide-eyebrow">Before you start</div>
+      <h2 class="guide-title">How to judge relevance</h2>
+      <p class="guide-lead">For each query you'll see 5 dataset records. Read the title and abstract, then decide how well the record would satisfy someone searching for that query.</p>
+
+      <!-- Scale -->
+      <div class="scale-rows">
+        <div class="scale-row s3">
+          <div class="scale-badge">3</div>
+          <div class="scale-body">
+            <div class="scale-name">Highly relevant</div>
+            <div class="scale-desc">The dataset directly addresses the query. A researcher would be satisfied finding this record.</div>
+          </div>
+        </div>
+        <div class="scale-row s2">
+          <div class="scale-badge">2</div>
+          <div class="scale-body">
+            <div class="scale-name">Partially relevant</div>
+            <div class="scale-desc">The dataset is related and useful, but only covers part of the query or is a broader/narrower match.</div>
+          </div>
+        </div>
+        <div class="scale-row s1">
+          <div class="scale-badge">1</div>
+          <div class="scale-body">
+            <div class="scale-name">Marginally relevant</div>
+            <div class="scale-desc">The dataset touches the topic but would not typically be selected as a useful result for this query.</div>
+          </div>
+        </div>
+        <div class="scale-row s0">
+          <div class="scale-badge">0</div>
+          <div class="scale-body">
+            <div class="scale-name">Not relevant</div>
+            <div class="scale-desc">The dataset is unrelated to the query. A researcher would not benefit from finding this record.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Worked example -->
+      <div class="example-block">
+        <div class="example-header">Worked example</div>
+        <div class="example-query-row">
+          <span class="example-query-tag">Query</span>
+          <span class="example-query-text">soil moisture measurements Central Europe</span>
+        </div>
+        <div class="example-docs">
+          <div class="example-doc">
+            <div class="example-doc-text">
+              <div class="example-doc-title">Long-term soil moisture time series for Germany 2000–2020</div>
+              <div class="example-doc-why">Exact topic, exact region, long temporal coverage — directly satisfies the query.</div>
+            </div>
+            <span class="example-verdict verdict-3">3 — Highly</span>
+          </div>
+          <div class="example-doc">
+            <div class="example-doc-text">
+              <div class="example-doc-title">Hydrology and soil properties of the Danube basin</div>
+              <div class="example-doc-why">Central Europe, soil data, but focuses on hydraulic properties rather than moisture measurements.</div>
+            </div>
+            <span class="example-verdict verdict-2">2 — Partial</span>
+          </div>
+          <div class="example-doc">
+            <div class="example-doc-text">
+              <div class="example-doc-title">European land cover classification 1990–2018</div>
+              <div class="example-doc-why">Covers the region but land cover is only tangentially related to soil moisture.</div>
+            </div>
+            <span class="example-verdict verdict-1">1 — Marginal</span>
+          </div>
+          <div class="example-doc">
+            <div class="example-doc-text">
+              <div class="example-doc-title">Atmospheric CO₂ concentrations at Mauna Loa Observatory</div>
+              <div class="example-doc-why">Different variable, different region — no meaningful connection to the query.</div>
+            </div>
+            <span class="example-verdict verdict-0">0 — Not rel.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="guide-tips">
+        <div class="guide-tip">Judge based on the <strong>metadata only</strong> — title and abstract — not on what you think the dataset might contain.</div>
+        <div class="guide-tip">Use your domain knowledge. If a record seems relevant to you as an expert, trust that judgment.</div>
+        <div class="guide-tip">When uncertain between two levels, pick the lower one.</div>
+        <div class="guide-tip">Keyboard shortcuts: <kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">0</kbd>–<kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">3</kbd> to rate, <kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">←</kbd><kbd style="font-family:'IBM Plex Mono',monospace; font-size:11px; padding:1px 5px; background:var(--surface-2); border:1px solid var(--border); border-radius:3px;">→</kbd> to navigate documents.</div>
+      </div>
+
+      <button class="btn-primary" onclick="startAnnotation()">Start annotating →</button>
+    </div>
+  </div>
+
+  <!-- Annotate -->
   <div id="screen-annotate" class="screen">
-    <div class="query-panel">
-      <div class="query-box">
-        <div style="font-family:'IBM Plex Mono'; font-size:10px; color:var(--text-muted); margin-bottom:8px;" id="query-id-label">QUERY ID</div>
-        <div class="query-text" id="query-text">...</div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Query — prominent green panel -->
+      <div class="query-panel">
+        <div class="query-panel-label">Search query</div>
+        <div class="query-index" id="query-index">— / —</div>
+        <div class="query-text" id="query-text">…</div>
       </div>
-      <div class="query-box">
-        <div style="font-family:'IBM Plex Mono'; font-size:10px; color:var(--text-muted); margin-bottom:8px;">DOCUMENTS</div>
-        <div style="display:flex; flex-wrap:wrap; gap:6px;" id="doc-dots"></div>
+
+      <!-- Doc dots -->
+      <div class="panel">
+        <div class="panel-label">Documents</div>
+        <div class="doc-nav" id="doc-dots"></div>
       </div>
-      <div style="display:flex; gap:8px;">
-        <button class="jbtn" style="flex:1; font-size:11px; background:white; border:1px solid var(--border)" onclick="changeQuery(-1)">← Prev Query</button>
-        <button class="jbtn" style="flex:1; font-size:11px; background:white; border:1px solid var(--border)" onclick="changeQuery(1)">Next Query →</button>
+
+      <!-- Query navigation -->
+      <div class="query-nav">
+        <button class="btn-ghost" onclick="changeQuery(-1)">← Prev query</button>
+        <button class="btn-ghost" onclick="changeQuery(1)">Next query →</button>
       </div>
+
     </div>
 
-    <div class="main-panel">
+    <!-- Main -->
+    <div class="main">
+
+      <!-- Document -->
       <div class="doc-card">
-        <div id="doc-content">
-          <div class="doc-title" id="doc-title">Loading...</div>
-          <div class="doc-abstract" id="doc-abstract"></div>
-        </div>
+        <div class="doc-number" id="doc-number">Document — of —</div>
+        <div class="doc-title" id="doc-title">Loading…</div>
+        <div class="doc-abstract" id="doc-abstract"></div>
       </div>
 
+      <!-- Judgment -->
       <div class="judgment-card">
-        <div style="font-size:13px; margin-bottom:12px; font-weight:500;">How relevant is this record?</div>
-        <div class="judgment-buttons">
-          <button class="jbtn b3" onclick="judge(3)" id="btn-3"><span>Highly</span><span style="font-size:10px; opacity:0.7">3</span></button>
-          <button class="jbtn b3" style="background:#eaf4f0; color:#297050" onclick="judge(2)" id="btn-2"><span>Partial</span><span style="font-size:10px; opacity:0.7">2</span></button>
-          <button class="jbtn b0" style="background:var(--warn-light); color:var(--warn)" onclick="judge(1)" id="btn-1"><span>Marginal</span><span style="font-size:10px; opacity:0.7">1</span></button>
-          <button class="jbtn b0" onclick="judge(0)" id="btn-0"><span>Not Rel</span><span style="font-size:10px; opacity:0.7">0</span></button>
+        <div class="judgment-label">How relevant is this record to the search query on the left?</div>
+        <div class="judgment-btns">
+          <button class="jbtn jbtn-3" onclick="judge(3)" id="btn-3" title="Keyboard: 3">
+            <span class="jbtn-label">Highly relevant</span>
+            <span class="jbtn-score">3 — directly answers the query</span>
+          </button>
+          <button class="jbtn jbtn-2" onclick="judge(2)" id="btn-2" title="Keyboard: 2">
+            <span class="jbtn-label">Partially relevant</span>
+            <span class="jbtn-score">2 — related but incomplete</span>
+          </button>
+          <button class="jbtn jbtn-1" onclick="judge(1)" id="btn-1" title="Keyboard: 1">
+            <span class="jbtn-label">Marginally relevant</span>
+            <span class="jbtn-score">1 — tangentially related</span>
+          </button>
+          <button class="jbtn jbtn-0" onclick="judge(0)" id="btn-0" title="Keyboard: 0">
+            <span class="jbtn-label">Not relevant</span>
+            <span class="jbtn-score">0 — unrelated to query</span>
+          </button>
         </div>
       </div>
 
-      <div style="display:flex; justify-content: space-between; align-items: center;">
-        <button class="jbtn" style="background:none; border:none; color:var(--text-muted)" onclick="navigateDoc(-1)">← Prev</button>
-        <button class="btn-submit" id="btn-submit" onclick="submitAll()">Submit Judgments</button>
-        <button class="jbtn" style="background:none; border:none; color:var(--text-muted)" onclick="navigateDoc(1)">Skip →</button>
+      <!-- Controls -->
+      <div class="doc-controls">
+        <button class="btn-nav" onclick="navigateDoc(-1)">← Prev doc</button>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <button class="btn-submit" id="btn-submit" onclick="submitAll()">Submit Judgments</button>
+          <div class="kb-hint"><kbd>0</kbd>–<kbd>3</kbd> rate · <kbd>←</kbd><kbd>→</kbd> navigate</div>
+        </div>
+        <button class="btn-nav" onclick="navigateDoc(1)">Next doc →</button>
       </div>
+
     </div>
   </div>
 
+  <!-- Done -->
   <div id="screen-done" class="screen">
-    <div class="done-card" style="margin: auto;">
-      <div style="font-size:48px;">🎉</div>
-      <h2>Completed</h2>
-      <p style="color:var(--text-muted); margin: 20px 0;">Annotations saved. Thank you for your time.</p>
-      <button class="btn-submit" onclick="location.reload()">Start New Session</button>
+    <div class="done-card">
+      <div class="done-icon">✓</div>
+      <h2 class="done-title">Annotations saved</h2>
+      <p class="done-lead">Thank you for contributing to NFDI4Earth.</p>
+      <button class="btn-primary" style="width:auto; padding:12px 28px" onclick="location.reload()">Start new session</button>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
-    let state = {
-      annotator: '',
-      profession: '',
-      institution: '', // Added to state
-      startTime: null,
+    // ── State ──────────────────────────────────────────────────────────────────
+    const state = {
+      annotator:       '',
+      profession:      '',
+      institution:     '',
+      startTime:       null,
       assignedQueries: [],
-      qIdx: 0,
-      dIdx: 0,
-      judgments: {},
+      qIdx:            0,
+      dIdx:            0,
+      judgments:       {},
     };
 
-    let allTopics = [];
-    let allQrels = {};
-    let coverageDataGlobal = {};
-    let saturatedQids = new Set();
-    const docCache = {};
+    let allTopics          = [];
+    let allQrels           = {};
+    let coverageData       = {};
+    let saturatedQids      = new Set();
+    const docCache         = {};
 
+    // ── Data loading ───────────────────────────────────────────────────────────
     async function init() {
       try {
-        setLoadingMsg("Loading topics...");
-        allTopics = parseTSV(await fetch(CONFIG.GITHUB_TOPICS_URL).then(r => r.text()), ["qid", "query"]);
-        allQrels = parseQrels(await fetch(CONFIG.GITHUB_QRELS_URL).then(r => r.text()));
-        await fetchSaturatedQueries();
-        showScreen("welcome");
-      } catch (e) { document.getElementById("loading-msg").textContent = "Error loading data."; }
+        setLoadingMsg('Loading topics…');
+        allTopics = parseTSV(
+          await fetch(CONFIG.GITHUB_TOPICS_URL).then(r => r.text()),
+          ['qid', 'query']
+        );
+
+        setLoadingMsg('Loading qrels…');
+        allQrels = parseQrels(
+          await fetch(CONFIG.GITHUB_QRELS_URL).then(r => r.text())
+        );
+
+        setLoadingMsg('Checking coverage…');
+        await loadCoverage();
+
+        showScreen('welcome');
+      } catch (e) {
+        setLoadingMsg('Failed to load data. Please refresh.');
+        console.error(e);
+      }
     }
 
-    function parseTSV(t, c) { return t.trim().split("\n").slice(1).map(l => { let p = l.split("\t"), o = {}; c.forEach((k, i) => o[k] = (p[i] || "").trim()); return o; }).filter(r => r.qid); }
-    function parseQrels(t) { let q = {}; t.trim().split("\n").forEach(l => { let p = l.trim().split(/\s+/); if (p.length < 4) return; if (!q[p[0]]) q[p[0]] = []; q[p[0]].push({ doc_id: p[2], score: parseInt(p[3]) }); }); return q; }
+    function parseTSV(text, cols) {
+      return text.trim().split('\n').slice(1).map(line => {
+        const parts = line.split('\t');
+        return Object.fromEntries(cols.map((k, i) => [k, (parts[i] || '').trim()]));
+      }).filter(r => r.qid);
+    }
 
-    async function fetchSaturatedQueries() {
+    function parseQrels(text) {
+      const out = {};
+      text.trim().split('\n').forEach(line => {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length < 4) return;
+        const [qid, , doc_id, score] = parts;
+        if (!out[qid]) out[qid] = [];
+        out[qid].push({ doc_id, score: parseInt(score) });
+      });
+      return out;
+    }
+
+    async function loadCoverage() {
       try {
         const r = await fetch(`${CONFIG.API_BASE_URL}/annotations/coverage`);
         if (!r.ok) return;
-        coverageDataGlobal = await r.json();
-        Object.entries(coverageDataGlobal).forEach(([qid, count]) => { if (count >= CONFIG.MAX_ANNOTATIONS_PER_QUERY) saturatedQids.add(qid); });
-      } catch (e) {}
+        coverageData = await r.json();
+        Object.entries(coverageData).forEach(([qid, count]) => {
+          if (count >= CONFIG.MAX_ANNOTATIONS_PER_QUERY) saturatedQids.add(qid);
+        });
+      } catch {
+        // Non-fatal — proceed without coverage data
+      }
     }
 
+    // ── Document fetching ──────────────────────────────────────────────────────
     async function fetchDocument(id) {
       if (docCache[id]) return docCache[id];
       try {
         const r = await fetch(`${CONFIG.DOCUMENT_API}/${id}`);
         const d = await r.json();
         if (!d.abstract || d.abstract.length < 50) return null;
-        return docCache[id] = { title: d.title || `Doc ${id}`, abstract: d.abstract };
-      } catch (e) { return null; }
+        const doc = { title: d.title || `Document ${id}`, abstract: d.abstract };
+        docCache[id] = doc;
+        return doc;
+      } catch {
+        return null;
+      }
     }
 
-    async function assignAndStart() {
-      const profs = Array.from(document.querySelectorAll('input[name="profession"]:checked')).map(el => el.value);
-      if (profs.length === 0) { showStartError("Select a profession."); return; }
+    // ── Start / query assignment ───────────────────────────────────────────────
+    async function handleStart() {
+      const profs = [...document.querySelectorAll('input[name="profession"]:checked')]
+        .map(el => el.value);
 
-      const startBtn = document.getElementById("btn-start");
-      startBtn.disabled = true;
-      startBtn.textContent = "Sampling prioritized queries...";
+      if (profs.length === 0) {
+        showStartError('Please select at least one background option.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-start');
+      btn.disabled = true;
+      btn.textContent = 'Sampling queries…';
 
       try {
-        state.annotator = "Anon-" + Math.floor(1000 + Math.random() * 9000);
-        state.profession = profs.join(", ");
-        state.institution = document.getElementById("institution").value.trim() || "Unspecified";
-        
-        const pool = allTopics.filter(t => !saturatedQids.has(t.qid)).sort((a, b) => {
-          let cA = coverageDataGlobal[a.qid] || 0, cB = coverageDataGlobal[b.qid] || 0;
-          return (cB !== cA) ? cB - cA : 0.5 - Math.random();
+        state.annotator  = 'Anon-' + Math.floor(1000 + Math.random() * 9000);
+        state.profession = profs.join(', ');
+        state.institution = document.getElementById('institution').value.trim() || 'Unspecified';
+
+        const queries = await sampleQueries();
+        if (queries.length === 0) throw new Error('No suitable queries found.');
+
+        state.assignedQueries = queries;
+        state.startTime = Date.now();
+        state.qIdx = 0;
+        state.dIdx = 0;
+        state.judgments = {};
+
+        showScreen('guide');
+      } catch (e) {
+        showStartError('Could not sample queries. Please try again.');
+        console.error(e);
+        btn.disabled = false;
+        btn.textContent = 'Begin annotation →';
+      }
+    }
+
+    async function sampleQueries() {
+      // Sort: lower coverage first (prioritise under-annotated), shuffle ties
+      const pool = allTopics
+        .filter(t => !saturatedQids.has(t.qid))
+        .sort((a, b) => {
+          const cA = coverageData[a.qid] ?? 0;
+          const cB = coverageData[b.qid] ?? 0;
+          return cA !== cB ? cA - cB : Math.random() - 0.5;
         });
-        
-        const finalSelection = [];
-        for (let t of pool) {
-          if (finalSelection.length >= CONFIG.QUERIES_PER_ANNOTATOR) break;
-          const docs = (allQrels[t.qid] || []).sort(() => 0.5 - Math.random()), valid = [];
-          for (let d of docs) {
-            if (valid.length >= CONFIG.DOCS_PER_QUERY) break;
-            if (await fetchDocument(d.doc_id)) valid.push(d);
-          }
-          if (valid.length >= CONFIG.DOCS_PER_QUERY) finalSelection.push({ ...t, docs: valid });
+
+      const selected = [];
+      for (const topic of pool) {
+        if (selected.length >= CONFIG.QUERIES_PER_ANNOTATOR) break;
+
+        const candidates = (allQrels[topic.qid] || []).sort(() => Math.random() - 0.5);
+        const validDocs = [];
+
+        for (const entry of candidates) {
+          if (validDocs.length >= CONFIG.DOCS_PER_QUERY) break;
+          const doc = await fetchDocument(entry.doc_id);
+          if (doc) validDocs.push(entry);
         }
 
-        state.assignedQueries = finalSelection;
-        state.startTime = Date.now();
-        showScreen("annotate");
-        document.getElementById("progress-wrap").style.display = "flex";
-        renderAnnotation();
-      } catch (e) { showStartError("Could not sample queries. Retry."); startBtn.disabled = false; }
+        if (validDocs.length >= CONFIG.DOCS_PER_QUERY) {
+          selected.push({ ...topic, docs: validDocs });
+        }
+      }
+
+      return selected;
     }
 
+    async function startAnnotation() {
+      showScreen('annotate');
+      document.getElementById('header-progress').style.display = 'flex';
+      await renderAnnotation();
+    }
+
+    // ── Annotation rendering ───────────────────────────────────────────────────
     async function renderAnnotation() {
-      const q = state.assignedQueries[state.qIdx], d = q.docs[state.dIdx];
-      document.getElementById("query-id-label").textContent = `QUERY ${q.qid} · ${state.qIdx + 1}/${state.assignedQueries.length}`;
-      document.getElementById("query-text").textContent = q.query;
-      const dots = document.getElementById("doc-dots"); dots.innerHTML = "";
+      const q = state.assignedQueries[state.qIdx];
+      const d = q.docs[state.dIdx];
+
+      // Query panel
+      document.getElementById('query-index').textContent =
+        `Query ${q.qid} · ${state.qIdx + 1} of ${state.assignedQueries.length}`;
+      document.getElementById('query-text').textContent = q.query;
+
+      // Dot nav
+      const dotsEl = document.getElementById('doc-dots');
+      dotsEl.innerHTML = '';
       q.docs.forEach((doc, idx) => {
-        const dot = document.createElement("div");
-        dot.className = `doc-dot ${idx === state.dIdx ? 'current' : ''} ${state.judgments[`${q.qid}_${doc.doc_id}`] !== undefined ? 'judged' : ''}`;
-        dot.textContent = idx + 1; dot.onclick = () => { state.dIdx = idx; renderAnnotation(); };
-        dots.appendChild(dot);
+        const dot = document.createElement('div');
+        const judged  = state.judgments[judgmentKey(q.qid, doc.doc_id)] !== undefined;
+        const current = idx === state.dIdx;
+        dot.className = ['doc-dot', current ? 'current' : '', judged ? 'judged' : ''].join(' ').trim();
+        dot.textContent = idx + 1;
+        dot.title = `Document ${idx + 1}${judged ? ' (judged)' : ''}`;
+        dot.onclick = () => { state.dIdx = idx; renderAnnotation(); };
+        dotsEl.appendChild(dot);
       });
+
+      // Document content
+      document.getElementById('doc-number').textContent =
+        `Document ${state.dIdx + 1} of ${q.docs.length}`;
+
       const data = await fetchDocument(d.doc_id);
-      document.getElementById("doc-title").textContent = data.title;
-      document.getElementById("doc-abstract").textContent = data.abstract;
-      document.querySelectorAll(".judgment-buttons .jbtn").forEach(b => b.classList.remove("sel"));
-      const score = state.judgments[`${q.qid}_${d.doc_id}`];
-      if (score !== undefined) document.getElementById(`btn-${score}`).classList.add("sel");
-      updateProgress(); checkSubmitReady();
+      document.getElementById('doc-title').textContent    = data?.title    ?? `Document ${d.doc_id}`;
+      document.getElementById('doc-abstract').textContent = data?.abstract ?? 'Abstract unavailable.';
+
+      // Judgment buttons
+      document.querySelectorAll('.jbtn').forEach(b => b.classList.remove('active'));
+      const score = state.judgments[judgmentKey(q.qid, d.doc_id)];
+      if (score !== undefined) {
+        document.getElementById(`btn-${score}`).classList.add('active');
+      }
+
+      updateProgress();
+      updateSubmitButton();
     }
 
-    function judge(s) {
-      const q = state.assignedQueries[state.qIdx], d = q.docs[state.dIdx];
-      state.judgments[`${q.qid}_${d.doc_id}`] = s;
-      if (state.dIdx < q.docs.length - 1) state.dIdx++;
-      else if (state.qIdx < state.assignedQueries.length - 1) { state.qIdx++; state.dIdx = 0; showToast("Next query..."); }
+    // ── Judgment logic ─────────────────────────────────────────────────────────
+    function judge(score) {
+      const q   = state.assignedQueries[state.qIdx];
+      const d   = q.docs[state.dIdx];
+      const key = judgmentKey(q.qid, d.doc_id);
+
+      const alreadyJudged = state.judgments[key] !== undefined;
+      state.judgments[key] = score;
+
+      // Only auto-advance on a fresh judgment — re-scoring in place doesn't skip
+      if (!alreadyJudged) {
+        if (state.dIdx < q.docs.length - 1) {
+          state.dIdx++;
+        } else if (state.qIdx < state.assignedQueries.length - 1) {
+          state.qIdx++;
+          state.dIdx = 0;
+          showToast(`Query ${state.qIdx + 1} of ${state.assignedQueries.length}`);
+        }
+      }
+
       renderAnnotation();
     }
 
-    function checkSubmitReady() {
-      const btn = document.getElementById("btn-submit"), count = Object.keys(state.judgments).length;
-      const total = state.assignedQueries.reduce((a, q) => a + q.docs.length, 0);
-      btn.classList.toggle("incomplete", count < total);
-      btn.textContent = count < total ? `Submit Partial (${count}/${total})` : "Submit All Judgments";
+    function judgmentKey(qid, docId) {
+      return `${qid}__${docId}`;
+    }
+
+    // ── Navigation ─────────────────────────────────────────────────────────────
+    function navigateDoc(dir) {
+      const q = state.assignedQueries[state.qIdx];
+      state.dIdx = Math.max(0, Math.min(q.docs.length - 1, state.dIdx + dir));
+      renderAnnotation();
+    }
+
+    function changeQuery(dir) {
+      state.qIdx = Math.max(0, Math.min(state.assignedQueries.length - 1, state.qIdx + dir));
+      state.dIdx = 0;
+      renderAnnotation();
+    }
+
+    // ── Progress & submit ──────────────────────────────────────────────────────
+    function updateProgress() {
+      const total = state.assignedQueries.reduce((sum, q) => sum + q.docs.length, 0);
+      const done  = Object.keys(state.judgments).length;
+      document.getElementById('progress-text').textContent = `${done} / ${total}`;
+      document.getElementById('progress-fill').style.width = `${(done / total) * 100}%`;
+    }
+
+    function updateSubmitButton() {
+      const total   = state.assignedQueries.reduce((sum, q) => sum + q.docs.length, 0);
+      const done    = Object.keys(state.judgments).length;
+      const btn     = document.getElementById('btn-submit');
+      const partial = done < total;
+      btn.classList.toggle('partial', partial);
+      btn.textContent = partial
+        ? `Submit partial (${done} / ${total})`
+        : 'Submit all judgments';
     }
 
     async function submitAll() {
-      const rows = [], ts = new Date().toISOString();
-      Object.entries(state.judgments).forEach(([k, s]) => {
-        const [qid, doc_id] = k.split("_"), q = state.assignedQueries.find(i => i.qid === qid);
-        rows.push({ annotator: state.annotator, profession: state.profession, institution: state.institution, qid, query: q.query, doc_id, score: s, timestamp: ts });
+      const ts   = new Date().toISOString();
+      const rows = Object.entries(state.judgments).map(([key, score]) => {
+        const [qid, doc_id] = key.split('__');
+        const q = state.assignedQueries.find(i => i.qid === qid);
+        return {
+          annotator:   state.annotator,
+          profession:  state.profession,
+          institution: state.institution,
+          qid,
+          query:       q?.query ?? '',
+          doc_id,
+          score,
+          timestamp:   ts,
+        };
       });
-      const btn = document.getElementById("btn-submit"); btn.disabled = true; btn.textContent = "Saving...";
+
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
       try {
-        const r = await fetch(`${CONFIG.API_BASE_URL}/annotations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rows }) });
-        if (r.ok) showScreen("done"); else throw new Error();
-      } catch (e) { btn.disabled = false; alert("Failed to save."); }
+        const r = await fetch(`${CONFIG.API_BASE_URL}/annotations`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ rows }),
+        });
+        if (r.ok) {
+          showScreen('done');
+        } else {
+          throw new Error(`HTTP ${r.status}`);
+        }
+      } catch (e) {
+        console.error(e);
+        btn.disabled = false;
+        updateSubmitButton();
+        showToast('Failed to save. Please try again.');
+      }
     }
 
-    function updateProgress() {
-      const total = state.assignedQueries.reduce((a, q) => a + q.docs.length, 0), done = Object.keys(state.judgments).length;
-      document.getElementById("progress-label").textContent = `${done} / ${total}`;
-      document.getElementById("progress-fill").style.width = `${(done / total) * 100}%`;
+    // ── Keyboard shortcuts ─────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('screen-annotate').classList.contains('active')) return;
+      if (e.target.tagName === 'INPUT') return;
+      if (['0','1','2','3'].includes(e.key)) judge(parseInt(e.key));
+      if (e.key === 'ArrowRight') navigateDoc(1);
+      if (e.key === 'ArrowLeft')  navigateDoc(-1);
+    });
+
+    // ── UI helpers ─────────────────────────────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`screen-${id}`).classList.add('active');
     }
 
-    function navigateDoc(dir) { const q = state.assignedQueries[state.qIdx]; state.dIdx = Math.max(0, Math.min(q.docs.length - 1, state.dIdx + dir)); renderAnnotation(); }
-    function changeQuery(dir) { state.qIdx = Math.max(0, Math.min(state.assignedQueries.length - 1, state.qIdx + dir)); state.dIdx = 0; renderAnnotation(); }
-    function showScreen(id) { document.querySelectorAll(".screen").forEach(s => s.classList.remove("active")); document.getElementById(`screen-${id}`).classList.add("active"); }
-    function setLoadingMsg(m) { document.getElementById("loading-msg").textContent = m; }
-    function showStartError(m) { const el = document.getElementById("start-error"); el.textContent = m; el.style.display = "block"; }
-    function showToast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2000); }
-    document.addEventListener("keydown", e => { if (!document.getElementById("screen-annotate").classList.contains("active")) return; if (["0", "1", "2", "3"].includes(e.key)) judge(parseInt(e.key)); if (e.key === "ArrowRight") navigateDoc(1); if (e.key === "ArrowLeft") navigateDoc(-1); });
+    function setLoadingMsg(msg) {
+      document.getElementById('loading-msg').textContent = msg;
+    }
+
+    function showStartError(msg) {
+      const el = document.getElementById('start-error');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ── Boot ───────────────────────────────────────────────────────────────────
     init();
   </script>
 </body>
