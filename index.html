@@ -1021,6 +1021,52 @@
       font-family: inherit;
       font-size: inherit;
     }
+
+    /* ── Mobile Responsive Adjustments ── */
+    @media (max-width: 800px) {
+      #screen-annotate {
+        flex-direction: column;
+        /* Stacks the sidebar on top of the document */
+        padding: 15px;
+        gap: 15px;
+        align-items: stretch;
+      }
+
+      .sidebar {
+        width: 100%;
+        /* Sidebar uses full width */
+        position: static;
+        /* Stops it from being "sticky" so it doesn't overlap */
+        order: 2;
+        /* Moves navigation BELOW the document */
+      }
+
+      .main {
+        order: 1;
+        /* Keeps document at the top */
+      }
+
+      .query-chip-text,
+      .doc-title {
+        font-size: 18px;
+        /* Shrink text slightly for small screens */
+      }
+
+      .judgment-btns {
+        grid-template-columns: 1fr 1fr;
+        /* 2x2 grid instead of 4 across */
+      }
+
+      .jbtn-score {
+        display: none;
+        /* Hide sub-labels to save vertical space */
+      }
+
+      .header-right {
+        display: none !important;
+        /* Hide progress bar on tiny screens to save space */
+      }
+    }
   </style>
 </head>
 
